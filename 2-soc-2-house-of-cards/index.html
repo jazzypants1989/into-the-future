@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <title>Tell me this isn't a SPA</title>
+    <script src="/pages/Nope.js" defer></script>
+    <script src="/pages/ProductPage.js" defer></script>
+    <script src="/pages/Home.js" defer></script>
+    <script src="/pages/About.js" defer></script>
+    <script src="/pages/Products.js" defer></script>
+    <script src="/pages/Cart.js" defer></script>
+    <script src="/components/store.js" defer></script>
+    <script src="/components/Routes.js" defer></script>
+    <script src="/components/Router.js" defer></script>
+    <script src="/components/Product.js" defer></script>
+    <script src="/components/Link.js" defer></script>
+    <script src="/components/render.js" defer></script>
+    <script src="/features/search.js" defer></script>
+    <script src="/features/theme.js" defer></script>
+    <script src="/features/cart.js" defer></script>
+    <script src="/App.js" defer></script>
+  </head>
+  <body class="dark">
+    <nav>
+      <ul>
+        <li>
+          <a href="/" class="Link">Home</a>
+        </li>
+        <li>
+          <a href="/about" class="Link">About</a>
+        </li>
+        <li>
+          <a href="/products" class="Link">Products</a>
+        </li>
+        <li>
+          <a href="/cart" class="Link">Cart</a>
+          <span id="cart-count"></span>
+          <span id="cart-total"></span>
+        </li>
+        <li>
+          <input
+            aria-label="Search"
+            type="text"
+            placeholder="Search"
+            id="search"
+          />
+        </li>
+        <li>
+          <button id="toggleTheme">Toggle Theme</button>
+        </li>
+      </ul>
+    </nav>
+    <main class="main"></main>
+    <footer>
+      <a href="http://jazzypants.dev"> © 2023 Jovial Penguin, LLC.</a>
+    </footer>
+  </body>
+</html>
