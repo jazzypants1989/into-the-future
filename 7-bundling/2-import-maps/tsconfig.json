@@ -25,6 +25,7 @@
       "Routes": ["./public/components/Routes.js"],
       "store": ["./public/components/store.js"],
       "cart": ["./public/features/cart.js"],
+      "hamburger": ["./public/features/hamburger.js"],
       "search": ["./public/features/search.js"],
       "theme": ["./public/features/theme.js"],
       "About": ["./public/pages/About.js"],
@@ -34,7 +35,7 @@
       "Nope": ["./public/pages/Nope.js"],
       "ProductPage": ["./public/pages/ProductPage.js"],
       "Products": ["./public/pages/Products.js"],
-      "Types": ["./public/types.js"]
+      "Types": ["public/Types.js"]
     }
   },
   "include": ["public/**/*.js", "public/index.d.ts"],

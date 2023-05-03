@@ -21,7 +21,6 @@ export default function render(component) {
  * @async
  */
 export async function buttonFinderAdd() {
-  /** @type {Product[]} */
   const products = await getProducts()
 
   /** @type {NodeListOf<HTMLButtonElement>} */
@@ -34,7 +33,7 @@ export async function buttonFinderAdd() {
       const target = e.target
       if (!(target instanceof HTMLButtonElement)) return
       const id = target.id
-      const product = products.find((product) => product.id === Number(id))
+      const product = products?.find((product) => product.id === Number(id))
       if (!product) throw new Error("No product found.")
       addToCart(product)
     })
@@ -51,7 +50,7 @@ export async function buttonFinderRemove() {
       const target = e.target
       if (!(target instanceof HTMLButtonElement)) return
       const id = target.id
-      const product = products.find((product) => product.id === Number(id))
+      const product = products?.find((product) => product.id === Number(id))
       if (!product) throw new Error("No product found.")
       removeFromCart(product)
     })

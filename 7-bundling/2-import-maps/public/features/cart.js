@@ -1,5 +1,5 @@
 import Cart from "Cart"
-import * as Types from "types"
+import * as Types from "Types"
 
 /**
  * The cart object. This is stored in localStorage.

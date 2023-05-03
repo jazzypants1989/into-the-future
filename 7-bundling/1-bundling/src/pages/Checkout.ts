@@ -1,5 +1,11 @@
 import render from "../components/render"
 import { cart } from "../features/cart"
+import { loadStripe } from "@stripe/stripe-js"
+
+const STRIPE_PUBLIC_KEY =
+  "pk_test_51Ls3YjJiFO7cOn9i5GWxoJdBk5iN6FnUgdaHgD2wBxN7bqVFfcMKXQI4v86fwqhxe4b8CjYOKZNjg2VrcU2yply200OxYQlFCt"
+
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
 function createLineItems() {
   console.log("createLineItems", cart)
@@ -29,12 +35,18 @@ async function createSession() {
       line_items: createLineItems(),
       mode: "payment",
       success_url: "http://localhost:3001/success",
-      cancel_url: "http://localhost:4242/cancel",
+      cancel_url: "http://localhost:3001/cart",
     }),
   })
   const data = await response.json()
 
   console.log("data", data)
+
+  const stripe = await stripePromise
+  const result = await stripe?.redirectToCheckout({
+    sessionId: data.session.id,
+  })
+  console.log("result", result)
 
   // location.href = data.id.url
 }

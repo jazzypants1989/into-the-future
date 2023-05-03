@@ -31,7 +31,7 @@ export function searchListener() {
 export async function searchHandler() {
   /**
    * The products array.
-   * @type {_Types.Product[]}
+   * @type {_Types.Product[] | undefined}
    */
   const products = await getProducts()
   /**
@@ -42,16 +42,16 @@ export async function searchHandler() {
   document.title = "Search Page for " + searchValue
   /**
    * The filtered products array.
-   * @type {_Types.Product[]}
+   * @type {_Types.Product[] | undefined}
    */
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products?.filter((product) => {
     if (!searchValue) return false
     return product.title.toLowerCase().includes(searchValue?.toLowerCase())
   })
-  if (filteredProducts.length === 0) {
+  if (filteredProducts?.length === 0) {
     render(`<h1>Products</h1><p>No Products Found</p>`)
   } else {
-    const productsHTML = filteredProducts.map(ProductComponent).join("")
+    const productsHTML = filteredProducts?.map(ProductComponent).join("")
     render(`<h1>Products</h1>${productsHTML}`)
     buttonFinderAdd()
   }

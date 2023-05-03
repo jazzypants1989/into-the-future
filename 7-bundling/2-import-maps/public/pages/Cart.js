@@ -1,7 +1,7 @@
 import { getProducts } from "store"
 import render, { buttonFinderRemove } from "render"
 
-import * as Types from "../types.js"
+import * as Types from "../Types.js"
 
 /**
  * Cart page view template

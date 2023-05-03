@@ -14,7 +14,9 @@ export default function ProductComponent(product) {
               </a>
               <p>${product.description}</p>
               <p>$${product.price}</p>
-              <button class="add-to-cart" id="${product.id}">Add to cart</button>
+              <button 
+              style="margin-bottom: 1rem;"
+              class="add-to-cart" id="${product.id}">Add to cart</button>
               <a href="/">Back to home</a>
             </div>
             `

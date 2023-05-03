@@ -15,6 +15,7 @@ im.textContent = JSON.stringify({
     "store": "/components/store.js",
     "cart": "/features/cart.js",
     "search": "/features/search.js",
+    "hamburger": "/features/hamburger.js",
     "theme": "/features/theme.js",
     "About": "/pages/About.js",
     "Cart": "/pages/Cart.js",

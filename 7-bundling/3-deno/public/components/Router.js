@@ -26,6 +26,10 @@ export default function Router(navigateEvent) {
   const path = newURL.pathname
   const originURLPath = new URL(location.href).pathname
 
+  const nav = document.querySelector("nav")
+  const navOpen = nav?.style.display === "flex"
+  navOpen ? (nav.style.display = "none") : null
+
   if (navigateEvent && path === originURLPath) {
     navigateEvent.preventDefault()
     main?.scrollTo({ top: 0, behavior: "smooth" })
@@ -64,9 +68,6 @@ export default function Router(navigateEvent) {
                 addNewActiveClass()
               },
             })
-            // document.startViewTransition(async () => {
-            //   await Route(path)
-            // })
           } catch (error) {
             console.error("error", error)
             if (!main) return
@@ -79,7 +80,6 @@ export default function Router(navigateEvent) {
           await Route(path)
         },
       })
-  // : document.startViewTransition(async () => Route(path))
 }
 
 window.navigation.addEventListener("navigate", Router)
@@ -142,10 +142,6 @@ function transitionHelper({
   }
   const transition = document.startViewTransition(updateDOM)
 
-  // transition.finished.finally(() => {
-  //   removeActiveClass()
-  // })
-
   return transition
 }
 
@@ -185,12 +181,7 @@ function addNewActiveClass() {
   if (!clickedImage) return
   const newImage = document.querySelector("img")
   if (!newImage) return
+
+  newImage.classList.add("activeImage")
   newImage.style.viewTransitionName = "activeImage"
 }
-
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

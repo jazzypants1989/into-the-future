@@ -16,6 +16,7 @@ im.textContent = JSON.stringify({
     "cart": "/features/cart.js",
     "search": "/features/search.js",
     "theme": "/features/theme.js",
+    "hamburger": "/features/hamburger.js",
     "About": "/pages/About.js",
     "Cart": "/pages/Cart.js",
     "Checkout": "/pages/Checkout.js",
@@ -23,7 +24,7 @@ im.textContent = JSON.stringify({
     "Nope": "/pages/Nope.js",
     "ProductPage": "/pages/ProductPage.js",
     "Products": "/pages/Products.js",
-    "types": "/types.js",
+    "Types": "/Types.js",
   },
 })
 

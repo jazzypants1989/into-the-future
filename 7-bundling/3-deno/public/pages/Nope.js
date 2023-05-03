@@ -22,7 +22,9 @@ export default function Nope(id, prop) {
       break
     case "badFetch":
       render(
-        `<h1>404</h1><h2>Dang, either the server is down or someone misspelled a URL. Whatever it is, it's probably Jesse's fault.</h2>`
+        `<h1>404</h1><h2>Dang, either the server is down or someone misspelled a URL. Whatever it is, it's probably Jesse's fault. ${
+          prop ? prop : ""
+        }</h2>`
       )
       break
     case "error":

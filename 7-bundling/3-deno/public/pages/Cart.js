@@ -20,7 +20,7 @@ export default async function Cart() {
           `)
   } else {
     const cartItems = Object.keys(cart).map((id) => {
-      const product = products.find((product) => product.id === Number(id))
+      const product = products?.find((product) => product.id === Number(id))
       return `
             <div class="cart-item">
               <img src="${product?.thumbnail}" alt="${product?.title}" />
@@ -38,6 +38,13 @@ export default async function Cart() {
           ${cartItems.join("")}
           `)
     buttonFinderRemove()
+  }
+  if (!products) {
+    render(`
+          <h1>Cart</h1>
+          <p>There was an error loading your cart. Please try again later.</p>
+          `)
+    return []
   }
   return products
 }

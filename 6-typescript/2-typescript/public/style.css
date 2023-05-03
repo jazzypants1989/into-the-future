@@ -1,3 +1,7 @@
+:root {
+  view-transition-name: none;
+}
+
 body {
   position: absolute;
   overflow: hidden;
@@ -10,6 +14,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  transition: all 0.5s ease-in-out;
 }
 
 /* DARK THEME */
@@ -102,11 +107,11 @@ footer {
   width: 100%;
   position: absolute;
   background-color: #222;
+  view-transition-name: none;
 }
 
 nav {
   top: 0;
-  view-transition-name: nav;
   z-index: 1;
 }
 
@@ -120,6 +125,15 @@ nav {
 }
 
 /* MAIN CONTENT */
+
+main {
+  width: 100%;
+  overflow-y: auto;
+  margin-top: 4.5rem;
+  margin-bottom: 1rem;
+  scroll-behavior: smooth;
+  view-transition-name: main;
+}
 
 input {
   display: block;
@@ -135,22 +149,21 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  align-self: start;
 }
 
-main {
-  width: 100%;
-  overflow-y: auto;
-  margin-top: 4.5rem;
-  margin-bottom: 1rem;
-  scroll-behavior: smooth;
-  view-transition-name: none;
-  transition: background-color 0.6s;
+#toggleTheme {
+  margin-right: 2rem;
 }
 
 img {
   aspect-ratio: 1/1;
   object-fit: contain;
   width: 100%;
+  max-height: 30vh;
+}
+
+.activeImage {
   max-height: 50vh;
 }
 
@@ -169,19 +182,33 @@ img {
 
 footer {
   bottom: 0;
-  view-transition-name: footer;
 }
 
 h1 {
   view-transition-name: h1;
 }
 
-::view-transition-group(h1) {
-  animation-duration: 0.5s;
+::view-transition-old(main) {
+  animation: slide-left 0.8s ease-in-out;
 }
 
+::view-transition-new(main) {
+  animation: slide-right 0.8s ease-in-out;
+}
+
+::view-transition-group(activeImage),
+::view-transition-group(h1) {
+  animation-duration: 0.8s;
+}
+
+::view-transition-old(activeImage),
 ::view-transition-old(h1) {
   opacity: 0;
+}
+
+::view-transition-new(activeImage) {
+  opacity: 1;
+  animation: scaleUp 0.5s ease-in-out;
 }
 
 ::view-transition-new(h1) {
@@ -189,21 +216,15 @@ h1 {
   animation: none;
 }
 
-::view-transition-group(activeImage) {
-  animation-duration: 0.5s;
-}
-
-::view-transition-old(root) {
-  animation: slide-left 0.75s ease-in-out;
-}
-
-::view-transition-new(root) {
-  animation: slide-right 0.75s ease-in-out;
+@keyframes scaleUp {
+  from {
+    transform: scale(0.5);
+  }
 }
 
 @keyframes slide-left {
   to {
-    transform: translateX(-100%);
+    transform: translateX(50%);
     opacity: 0;
   }
 }

@@ -4,6 +4,7 @@
     "checkJs": true
   },
   "imports": {
+    "stripe-js": "https://esm.sh/@stripe/stripe-js@1.52.1",
     "date-fns": "https://unpkg.com/date-fns@2.27.0/esm/index.js",
     "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.6",
     "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.6",
@@ -14,6 +15,7 @@
     "store": "./public/components/store.js",
     "cart": "./public/features/cart.js",
     "search": "./public/features/search.js",
+    "hamburger": "./public/features/hamburger.js",
     "theme": "./public/features/theme.js",
     "About": "./public/pages/About.js",
     "Cart": "./public/pages/Cart.js",

@@ -2,7 +2,6 @@
  * @fileoverview This file contains the theme listener for the website
  * @module
  * @exports themeListener
- *
  */
 
 /**
