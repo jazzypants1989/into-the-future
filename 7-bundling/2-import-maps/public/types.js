@@ -43,4 +43,10 @@
  * @property {Product} product - The product.
  */
 
+/**
+ * @typedef {Object} Jesse A shitty programmer.
+ * @property {string} name - The name of the shitty programmer.
+ * @property {true} isShitty - Whether or not the programmer is shitty.
+ */
+
 export {}
