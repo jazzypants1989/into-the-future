@@ -15,7 +15,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 })
 const app = express()
 app.use(cors())
-app.use(express.static("dist"))
+app.use(express.static("public"))
 app.use(express.json())
 app.post("/create-checkout-session", async (req, res) => {
   const session = await stripe.checkout.sessions.create({
@@ -29,7 +29,7 @@ app.post("/create-checkout-session", async (req, res) => {
   res.json({ session })
 })
 app.get("*", function (req, res) {
-  res.sendFile(__dirname + "/dist/index.html")
+  res.sendFile(__dirname + "/public/index.html")
 })
 app.listen(3001, function () {
   console.log("Ctrl-Click here to test: http://localhost:3001")

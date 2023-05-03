@@ -224,7 +224,7 @@ h1 {
 
 @keyframes slide-left {
   to {
-    transform: translateX(50%);
+    transform: translateX(-75%);
     opacity: 0;
   }
 }

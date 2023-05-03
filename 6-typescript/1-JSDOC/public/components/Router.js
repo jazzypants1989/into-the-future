@@ -26,6 +26,10 @@ export default function Router(navigateEvent) {
   const newURL = new URL(url)
   const path = newURL.pathname
   const originURLPath = new URL(location.href).pathname
+  const nav = document.querySelector("nav")
+  const navOpen = nav?.style.display === "flex"
+  const mediaQuery = window.matchMedia("(max-width: 768px)")
+  navOpen && mediaQuery.matches ? (nav.style.display = "none") : null
 
   if (navigateEvent && path === originURLPath) {
     navigateEvent.preventDefault()
@@ -186,12 +190,6 @@ function addNewActiveClass() {
   if (!clickedImage) return
   const newImage = document.querySelector("img")
   if (!newImage) return
+  newImage.classList.add("activeImage")
   newImage.style.viewTransitionName = "activeImage"
 }
-
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

@@ -1,14 +1,14 @@
 import Nope from "../pages/Nope.js"
 
 const Routes = [
-  { path: "/", component: "home" },
-  { path: "/about", component: "about" },
+  { path: "/", component: "Home" },
+  { path: "/about", component: "About" },
   { path: "/products", component: "Products" },
   { path: "/product", component: "ProductPage", dynamic: true },
-  { path: "/cart", component: "cart" },
-  { path: "/checkout", component: "checkout" },
-  { path: "/success", component: "success" },
-  { path: "/events", component: "events" },
+  { path: "/cart", component: "Cart" },
+  { path: "/checkout", component: "Checkout" },
+  { path: "/success", component: "Success" },
+  { path: "/events", component: "Events" },
 ]
 
 export async function Route(path: string) {
@@ -20,7 +20,7 @@ export async function Route(path: string) {
     return
   }
 
-  const component = await import(`../pages/${route.component}.js`.toLowerCase())
+  const component = await import(`../pages/${route.component}.js`)
   if (route.dynamic) {
     const id = path.split("/")[path.split("/").length - 1]
     return component.default(id)

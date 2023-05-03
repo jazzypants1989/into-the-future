@@ -26,6 +26,16 @@ export default function Router(navigateEvent) {
   const path = newURL.pathname
   const searchParams = new URLSearchParams(newURL.search)
   const searchValue = searchParams.get("search")
+  const nav = document.querySelector("nav")
+  const navOpen = nav?.style.display === "flex"
+  const mediaQuery = window.matchMedia("(max-width: 768px)")
+  navOpen && mediaQuery.matches ? (nav.style.display = "none") : null
+
+  if (navigateEvent && path === location.pathname) {
+    navigateEvent.preventDefault()
+    main?.scrollTo({ top: 0, behavior: "smooth" })
+    return
+  }
 
   // Start Spinner
   const spinner = createSpinner()
@@ -56,9 +66,6 @@ export default function Router(navigateEvent) {
                 addNewActiveClass()
               },
             })
-            // document.startViewTransition(async () => {
-            //   await Route(path)
-            // })
           } catch (error) {
             console.error("error", error)
             if (!main) return
@@ -71,7 +78,6 @@ export default function Router(navigateEvent) {
           await Route(path)
         },
       })
-  // : document.startViewTransition(async () => Route(path))
 }
 
 window.navigation.addEventListener("navigate", Router)
@@ -134,10 +140,6 @@ function transitionHelper({
   }
   const transition = document.startViewTransition(updateDOM)
 
-  // transition.finished.finally(() => {
-  //   removeActiveClass()
-  // })
-
   return transition
 }
 
@@ -177,12 +179,6 @@ function addNewActiveClass() {
   if (!clickedImage) return
   const newImage = document.querySelector("img")
   if (!newImage) return
+  newImage.classList.add("activeImage")
   newImage.style.viewTransitionName = "activeImage"
 }
-
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

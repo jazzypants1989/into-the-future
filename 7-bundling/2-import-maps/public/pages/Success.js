@@ -1,3 +1,4 @@
+import updateCart from "cart"
 import render from "render"
 
 /**
@@ -6,6 +7,9 @@ import render from "render"
  */
 export default function Success() {
   document.title = "Success" // Set the page title
+
+  localStorage.setItem("cart", JSON.stringify({}))
+  updateCart()
 
   render(`
     <div>

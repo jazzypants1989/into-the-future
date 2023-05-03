@@ -8,11 +8,23 @@ export default function Router(navigateEvent) {
         console.log("shouldNotIntercept");
         return;
     }
-    console.log(navigateEvent);
     // Get URL
     const url = navigateEvent ? navigateEvent.destination.url : location.href;
     const newURL = new URL(url);
     const path = newURL.pathname;
+    const nav = document.querySelector("nav");
+    const navOpen = nav?.style.display === "flex";
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    navOpen && mediaQuery.matches && (nav.style.display = "none");
+    if (navigateEvent && path === location.pathname) {
+        navigateEvent.intercept({
+            async handler() {
+                alert("We're already here! Silly Billy! *honk honk* 🤡 (that's you)");
+                navigateEvent.preventDefault();
+            },
+        });
+        return;
+    }
     const searchParams = new URLSearchParams(newURL.search);
     const searchValue = searchParams.get("search");
     // Start Spinner
@@ -124,12 +136,7 @@ function addNewActiveClass() {
         return;
     const newImage = document.querySelector("img");
     if (newImage) {
+        newImage.classList.add("activeImage");
         newImage.style.viewTransitionName = "activeImage";
     }
 }
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

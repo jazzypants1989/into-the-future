@@ -1,14 +1,14 @@
 import Nope from "Nope"
 
 const Routes = [
-  { path: "/", component: "home" },
-  { path: "/about", component: "about" },
+  { path: "/", component: "Home" },
+  { path: "/about", component: "About" },
   { path: "/products", component: "Products" },
   { path: "/product", component: "ProductPage", dynamic: true },
-  { path: "/cart", component: "cart" },
-  { path: "/checkout", component: "checkout" },
-  { path: "/success", component: "success" },
-  { path: "/events", component: "events" },
+  { path: "/cart", component: "Cart" },
+  { path: "/checkout", component: "Checkout" },
+  { path: "/success", component: "Success" },
+  { path: "/events", component: "Events" },
 ]
 
 /**

@@ -1,11 +1,11 @@
 import Nope from "Nope"
 
 const Routes = [
-  { path: "/", component: "home" },
-  { path: "/about", component: "about" },
+  { path: "/", component: "Home" },
+  { path: "/about", component: "About" },
   { path: "/products", component: "Products" },
   { path: "/product", component: "ProductPage", dynamic: true },
-  { path: "/cart", component: "cart" },
+  { path: "/cart", component: "Cart" },
   { path: "/checkout", component: "Checkout" },
   { path: "/success", component: "Success" },
   { path: "/events", component: "Events" },
@@ -27,7 +27,7 @@ export async function Route(path) {
   }
 
   try {
-    const component = await import(`../pages/${route.component}.js`)
+    const component = await import(`/pages/${route.component}.js`)
 
     if (route.dynamic) {
       const id = path.split("/")[path.split("/").length - 1]

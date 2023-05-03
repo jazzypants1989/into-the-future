@@ -24,7 +24,7 @@ im.textContent = JSON.stringify({
     "Nope": "/pages/Nope.js",
     "ProductPage": "/pages/ProductPage.js",
     "Products": "/pages/Products.js",
-    "Types": "./types.js",
+    "Types": "/types.js",
   },
 })
 

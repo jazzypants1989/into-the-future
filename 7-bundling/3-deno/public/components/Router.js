@@ -26,23 +26,26 @@ export default function Router(navigateEvent) {
   const path = newURL.pathname
   const originURLPath = new URL(location.href).pathname
 
+  // Close the mobile menu if it's open
   const nav = document.querySelector("nav")
   const navOpen = nav?.style.display === "flex"
-  navOpen ? (nav.style.display = "none") : null
+  const mediaQuery = window.matchMedia("(max-width: 768px)")
+  navOpen && mediaQuery.matches ? (nav.style.display = "none") : null
 
+  // Check if the path is the same as the origin path
   if (navigateEvent && path === originURLPath) {
     navigateEvent.preventDefault()
     main?.scrollTo({ top: 0, behavior: "smooth" })
     return
   }
 
-  const searchParams = new URLSearchParams(newURL.search)
-  const searchValue = searchParams.get("search")
-
   // Start Spinner
   const spinner = createSpinner()
   const mainHTML = main?.innerHTML
-  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 300)
+  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 200)
+
+  const searchParams = new URLSearchParams(newURL.search)
+  const searchValue = searchParams.get("search")
 
   // Check for search
   if (searchValue && search) {
@@ -54,6 +57,7 @@ export default function Router(navigateEvent) {
   // Route
   navigateEvent
     ? navigateEvent.intercept({
+        scroll: "manual",
         async handler() {
           navigateEvent.signal.onabort = () => {
             if (!main) return
@@ -65,13 +69,15 @@ export default function Router(navigateEvent) {
             await transitionHelper({
               updateDOM: async () => {
                 await Route(path)
+
+                window.scrollTo({ top: 0, behavior: "smooth" })
                 addNewActiveClass()
               },
             })
           } catch (error) {
             console.error("error", error)
             if (!main) return
-            Nope("error", "Something went wrong.")
+            Nope("error", "Something went wrong. Super helpful, I know.")
           }
         },
       })
@@ -93,7 +99,6 @@ window.navigation.addEventListener("navigate", Router)
  * @returns {void}
  */
 function checkAndReplaceHTML(event, mainHTML, spinner, time) {
-  if (event && event.destination.url === location.href) return
   if (event && event.formData) return
   setTimeout(() => {
     if (mainHTML === main?.innerHTML && main) {
@@ -125,11 +130,7 @@ function shouldNotIntercept(navigateEvent) {
  * @param {() => void} options.updateDOM
  * @returns {ViewTransition}
  */
-function transitionHelper({
-  skipTransition = false,
-  // classNames = [],
-  updateDOM,
-}) {
+function transitionHelper({ skipTransition = false, updateDOM }) {
   if (skipTransition || !document.startViewTransition) {
     const updateCallbackDone = Promise.resolve(updateDOM())
 

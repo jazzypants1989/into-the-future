@@ -144,6 +144,7 @@ function addNewActiveClass() {
   if (!clickedImage) return
   const newImage = document.querySelector("img")
   newImage.style.viewTransitionName = "activeImage"
+  newImage.classList.add("activeImage")
 }
 
 // function removeActiveClass() {

@@ -62,9 +62,6 @@ export default function Router(navigateEvent?: NavigateEvent) {
                 addNewActiveClass()
               },
             })
-            // document.startViewTransition(async () => {
-            //   await Route(path)
-            // })
           } catch (error) {
             console.error("error", error)
             Nope("error", (error as Error).message)
@@ -76,7 +73,6 @@ export default function Router(navigateEvent?: NavigateEvent) {
           await Route(path)
         },
       })
-  // : document.startViewTransition(async () => Route(path))
 }
 
 window.navigation.addEventListener("navigate", Router)
@@ -122,10 +118,6 @@ function transitionHelper({
   }
   const transition = document.startViewTransition(updateDOM)
 
-  // transition.finished.finally(() => {
-  //   removeActiveClass()
-  // })
-
   return transition
 }
 
@@ -159,13 +151,7 @@ function addNewActiveClass() {
   if (!clickedImage) return
   const newImage = document.querySelector("img")
   if (newImage) {
+    newImage.classList.add("activeImage")
     newImage.style.viewTransitionName = "activeImage"
   }
 }
-
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

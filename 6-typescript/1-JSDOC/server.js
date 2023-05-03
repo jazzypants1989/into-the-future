@@ -32,6 +32,7 @@ app.post("/checkout", function (req, res) {
     const params = new URLSearchParams()
     const error = "Please fill out all fields. Ya dingus."
     params.append("error", error)
+
     res.status(200).redirect("/checkout" + "?" + params.toString())
     return
   }
@@ -47,7 +48,9 @@ app.post("/checkout", function (req, res) {
   )
   params.append("address", address)
 
-  res.status(200).redirect("/success" + "?" + params.toString())
+  setTimeout(() => {
+    res.status(200).redirect("/success" + "?" + params.toString())
+  }, 1500)
 })
 
 app.get("*", function (req, res) {

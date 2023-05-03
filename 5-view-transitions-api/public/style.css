@@ -10,6 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  transition: all 0.5s ease-in-out;
 }
 
 .dark {
@@ -115,13 +116,17 @@ main {
   margin-bottom: 1rem;
   scroll-behavior: smooth;
   view-transition-name: none;
-  transition: background-color 0.6s;
+  transition: background-color 0.5s;
 }
 
 img {
   aspect-ratio: 1/1;
   object-fit: contain;
   width: 100%;
+  max-height: 30vh;
+}
+
+.activeImage {
   max-height: 50vh;
 }
 
@@ -274,21 +279,24 @@ button {
   background-color: #333;
 }
 
+::view-transition-group(activeImage),
 ::view-transition-group(h1) {
   animation-duration: 0.5s;
 }
 
+::view-transition-old(activeImage),
 ::view-transition-old(h1) {
   opacity: 0;
+}
+
+::view-transition-new(activeImage) {
+  opacity: 1;
+  animation: scaleUp 0.5s ease-in-out;
 }
 
 ::view-transition-new(h1) {
   opacity: 1;
   animation: none;
-}
-
-::view-transition-group(activeImage) {
-  animation-duration: 0.5s;
 }
 
 ::view-transition-old(root) {
@@ -336,13 +344,19 @@ button {
 }
 
 ::view-transition-group(root) {
-  animation-duration: 0.5s;
+  animation-duration: 0.8s;
 }
 
 ::view-transition-group(prev),
 ::view-transition-group(next),
 ::view-transition-group(submit) {
   opacity: 50%;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.5);
+  }
 }
 
 @keyframes progress-bar-transition {
@@ -388,13 +402,14 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: all 0.5s ease-in-out;
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
     padding: 0;
     width: 100%;
+    height: 0;
+    transition: all 0.5s ease-in-out;
     background: inherit;
   }
 
