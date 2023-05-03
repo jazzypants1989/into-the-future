@@ -1,7 +1,7 @@
 import { getProducts } from "store"
 import render, { buttonFinderRemove } from "render"
 
-import * as Types from "../Types.js"
+import * as Types from "../WHATDAFUG.js"
 
 /**
  * Cart page view template

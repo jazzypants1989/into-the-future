@@ -1,7 +1,7 @@
 import render, { buttonFinderAdd } from "render"
 import { getProducts } from "store"
 import ProductComponent from "Product"
-import * as Types from "../Types"
+import * as Types from "../WHATDAFUG"
 
 /**
  * The search input element. This is used to get the search value.
