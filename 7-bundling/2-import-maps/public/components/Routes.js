@@ -26,7 +26,7 @@ export async function Route(path) {
     return ""
   }
 
-  const component = await import(`../pages/${route.component}.js`.toLowerCase())
+  const component = await import(`../pages/${route.component}.js`)
   if (route.dynamic) {
     const id = path.split("/")[path.split("/").length - 1]
     return component.default(id)
