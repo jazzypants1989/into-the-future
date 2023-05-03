@@ -3,7 +3,7 @@ import { getProducts } from "store"
 import { main } from "Router"
 
 /**
- * @typedef {import("../WHATDAFUG.js").Product} Product
+ * @typedef {import("../Types.js").Product} Product
  */
 
 /**

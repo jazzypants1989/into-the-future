@@ -1,5 +1,5 @@
 import Nope from "Nope"
-import * as Types from "../WHATDAFUG"
+import * as Types from "../Types"
 
 /**
  * The products array.

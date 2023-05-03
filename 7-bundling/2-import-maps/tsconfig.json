@@ -35,7 +35,7 @@
       "Nope": ["./public/pages/Nope.js"],
       "ProductPage": ["./public/pages/ProductPage.js"],
       "Products": ["./public/pages/Products.js"],
-      "Types": ["public/WHATDAFUG.js"]
+      "Types": ["public/Types.js"]
     }
   },
   "include": ["public/**/*.js", "public/index.d.ts"],

@@ -1,4 +1,4 @@
-import * as Types from "../WHATDAFUG"
+import * as Types from "../Types"
 
 /**
  * The product component used to display a product.
