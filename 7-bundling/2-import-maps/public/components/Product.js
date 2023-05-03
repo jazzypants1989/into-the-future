@@ -1,4 +1,4 @@
-import * as Types from "../Types"
+import * as Types from "Types"
 
 /**
  * The product component used to display a product.

@@ -10,7 +10,6 @@
  * @property {string} description - The description of the product.
  * @property {number} price - The price of the product.
  * @property {number} discountPercentage - The discount percentage of the product.
- * @property {string} image - The image of the product.
  * @property {string} category - The category of the product.
  * @property {string} brand - The brand of the product.
  * @property {number} rating - The rating of the product.

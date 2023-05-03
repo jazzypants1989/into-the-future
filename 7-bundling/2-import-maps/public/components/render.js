@@ -3,10 +3,6 @@ import { getProducts } from "store"
 import { main } from "Router"
 
 /**
- * @typedef {import("../Types.js").Product} Product
- */
-
-/**
  * The render function-- renders the component to the main element.
  * @param {string} component - The component to render.
  */
