@@ -6,7 +6,14 @@ import assets from "https://deno.land/x/assets@0.0.1/mod.ts"
 import Stripe from "https://esm.sh/stripe@12.3.0"
 
 const env = await load()
-const STRIPE_SECRET_KEY = env.STRIPE_SECRET_KEY
+let STRIPE_SECRET_KEY = env.STRIPE_SECRET_KEY
+
+if (!STRIPE_SECRET_KEY) {
+  // throw new Error("No Stripe API key found in environment")
+  console.error("No Stripe API key found in environment")
+  STRIPE_SECRET_KEY =
+    "This won't work. Create a .env file with a STRIPE_SECRET_KEY"
+}
 
 const stripe = await Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2022-11-15",

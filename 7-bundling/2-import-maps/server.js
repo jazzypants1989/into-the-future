@@ -22,7 +22,15 @@ envContents.split("\r\n").forEach((line) => {
   const [key, value] = line.split("=")
   secrets[key] = value
 })
-const { STRIPE_SECRET_KEY } = secrets
+// const { STRIPE_SECRET_KEY } = secrets
+let { STRIPE_SECRET_KEY } = secrets
+
+if (!STRIPE_SECRET_KEY) {
+  // throw new Error("No STRIPE_SECRET_KEY in .env file")
+  console.error("No STRIPE_SECRET_KEY in .env file")
+  STRIPE_SECRET_KEY =
+    "This won't work. Create a .env file with a STRIPE_SECRET_KEY"
+}
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY)
 

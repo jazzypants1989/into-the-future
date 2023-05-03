@@ -8,7 +8,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 dotenv.config()
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("Missing Stripe secret key environment variable")
+  // throw new Error("Missing Stripe secret key environment variable")
+  console.error("Missing Stripe secret key environment variable! Dang.")
+  process.env.STRIPE_SECRET_KEY =
+    "This won't work. Create an .env file and add your Stripe secret key"
 }
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-11-15",
