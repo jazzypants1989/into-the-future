@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "checkJs": true
+  },
+  "imports": {
+    "date-fns": "https://unpkg.com/date-fns@2.27.0/esm/index.js",
+    "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.6",
+    "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.6",
+    "Product": "./public/components/Product.js",
+    "render": "./public/components/render.js",
+    "Router": "./public/components/Router.js",
+    "Routes": "./public/components/Routes.js",
+    "store": "./public/components/store.js",
+    "cart": "./public/features/cart.js",
+    "search": "./public/features/search.js",
+    "theme": "./public/features/theme.js",
+    "About": "./public/pages/About.js",
+    "Cart": "./public/pages/Cart.js",
+    "Checkout": "./public/pages/Checkout.js",
+    "Home": "./public/pages/Home.js",
+    "Nope": "./public/pages/Nope.js",
+    "ProductPage": "./public/pages/ProductPage.js",
+    "Products": "./public/pages/Products.js",
+    "Types": "./public/types.js"
+  }
+}

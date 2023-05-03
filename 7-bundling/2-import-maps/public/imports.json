@@ -1,0 +1,19 @@
+{
+  "imports": {
+    "Product": "/components/Product.js",
+    "render": "/components/render.js",
+    "Router": "/components/Router.js",
+    "Routes": "/components/Routes.js",
+    "store": "/components/store.js",
+    "cart": "/features/cart.js",
+    "search": "/features/search.js",
+    "theme": "/features/theme.js",
+    "About": "/pages/About.js",
+    "Cart": "/pages/Cart.js",
+    "Checkout": "/pages/Checkout.js",
+    "Home": "/pages/Home.js",
+    "Nope": "/pages/Nope.js",
+    "ProductPage": "/pages/ProductPage.js",
+    "Products": "/pages/Products.js"
+  }
+}
