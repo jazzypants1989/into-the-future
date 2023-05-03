@@ -18,12 +18,13 @@ app.use(function (req, res, next) {
 const __filename = new URL(import.meta.url).pathname
 const __dirname = path.dirname(__filename)
 const envFile = path.join(__dirname, ".env")
-const envContents = fs.readFileSync(envFile, "utf-8")
+const envContents = fs.existsSync(envFile) && fs.readFileSync(envFile, "utf8")
 const secrets = {}
-envContents.split("\r\n").forEach((line) => {
-  const [key, value] = line.split("=")
-  secrets[key] = value
-})
+envContents.length &&
+  envContents.split("\r\n").forEach((line) => {
+    const [key, value] = line.split("=")
+    secrets[key] = value
+  })
 const { STRIPE_SECRET_KEY } = secrets
 
 const stripe = new Stripe(STRIPE_SECRET_KEY)

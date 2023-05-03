@@ -16,12 +16,13 @@ app.use(function (req, res, next) {
 
 // ENV
 const envFile = path.join(__dirname, ".env")
-const envContents = fs.readFileSync(envFile, "utf-8")
+const envContents = fs.existsSync(envFile) && fs.readFileSync(envFile, "utf8")
 const secrets = {}
-envContents.split("\r\n").forEach((line) => {
-  const [key, value] = line.split("=")
-  secrets[key] = value
-})
+envContents.length &&
+  envContents.split("\r\n").forEach((line) => {
+    const [key, value] = line.split("=")
+    secrets[key] = value
+  })
 // const { STRIPE_SECRET_KEY } = secrets
 let { STRIPE_SECRET_KEY } = secrets
 
