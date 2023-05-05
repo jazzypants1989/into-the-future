@@ -7,9 +7,11 @@ export default async function ProductsPage() {
     const productsHTML = Object.values(products)
         .map((product) => ProductComponent(product))
         .join("");
-    render(`
+    render({
+        component: `
     <h1>Products</h1>
     <div class="products">${productsHTML}</div>
-  `);
-    buttonFinderAdd();
+  `,
+        callback: buttonFinderAdd,
+    });
 }

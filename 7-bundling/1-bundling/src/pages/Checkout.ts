@@ -87,7 +87,8 @@ const renderCartItems = () => {
 }
 
 export default function Checkout() {
-  render(`
+  render({
+    component: `
     <div>
       <h1>Checkout</h1>
       ${renderCartItems()}
@@ -98,6 +99,10 @@ export default function Checkout() {
       )}</p>
       <button id="checkout">Checkout (Redirect to Stripe)</button>
     </div>
-`)
-  document?.getElementById("checkout")?.addEventListener("click", createSession)
+`,
+    callback: () =>
+      document
+        ?.getElementById("checkout")
+        ?.addEventListener("click", createSession),
+  })
 }

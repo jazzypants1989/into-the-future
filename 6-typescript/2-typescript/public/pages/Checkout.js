@@ -18,6 +18,9 @@ function createLineItems() {
     });
 }
 async function createSession() {
+    const checkoutButton = document.getElementById("checkout");
+    checkoutButton.disabled = true;
+    checkoutButton.textContent = "Redirecting you to Stripe... HOLD YOUR HORSES!";
     const response = await fetch("/create-checkout-session", {
         method: "POST",
         headers: {
@@ -48,14 +51,20 @@ const renderCartItems = () => {
     });
     return cartItems.join("");
 };
+function sessionListener() {
+    const checkoutButton = document.getElementById("checkout");
+    checkoutButton.addEventListener("click", createSession);
+}
 export default function Checkout() {
-    render(`
+    render({
+        component: `
     <div>
       <h1>Checkout</h1>
       ${renderCartItems()}
       <p>Total: ${Object.keys(cart).reduce((acc, id) => acc + cart[Number(id)].product.price * cart[Number(id)].quantity, 0)}</p>
       <button id="checkout">Checkout (Redirect to Stripe)</button>
     </div>
-`);
-    document?.getElementById("checkout")?.addEventListener("click", createSession);
+`,
+        callback: sessionListener,
+    });
 }

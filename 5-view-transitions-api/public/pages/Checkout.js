@@ -10,7 +10,7 @@ export default async function Checkout() {
 
   const cartItems = Object.keys(cart).map((id) => {
     return `
-            <div class="cart-item">
+            <div class="product">
                 <h2>${cart[id].product.title}</h2>
                 <span>$${cart[id].product.price}</span>
                 <span>Quantity: ${cart[id].quantity}</span>
@@ -19,7 +19,9 @@ export default async function Checkout() {
   })
 
   if (cartItems.length === 0) {
-    render(`<h1>Checkout</h1><p>You have no items in your cart!</p>`)
+    render({
+      component: `<h1>Checkout</h1><p>You have no items in your cart!</p>`,
+    })
     return
   }
 
@@ -59,7 +61,8 @@ export default async function Checkout() {
         )}" />
         </form>
     `
-  render(`
+  render({
+    component: `
         <h1>Checkout</h1>
         <div style="view-transition-name: cartItems">
         ${cartItems.join("")}
@@ -69,232 +72,234 @@ export default async function Checkout() {
           0
         )}</p>
         ${form}
-    `)
+    `,
+    callback: () => {
+      const storedForm = JSON.parse(localStorage.getItem("formValues")) || {}
+      const storedStep = localStorage.getItem("step") || 0
 
-  const storedForm = JSON.parse(localStorage.getItem("formValues")) || {}
-  const storedStep = localStorage.getItem("step") || 0
+      if (storedForm) {
+        const inputs = document.querySelectorAll("input")
+        inputs.forEach((input) => {
+          if (input.name === "cart") return
+          if (input.name === "cvv") return
+          if (storedForm[input.name] === undefined) return
 
-  if (storedForm) {
-    const inputs = document.querySelectorAll("input")
-    inputs.forEach((input) => {
-      if (input.name === "cart") return
-      if (input.name === "cvv") return
-      if (storedForm[input.name] === undefined) return
+          input.value = storedForm[input.name]
+        })
+      }
 
-      input.value = storedForm[input.name]
-    })
-  }
+      const steps = document.querySelectorAll(".form-step")
+      const prevButton = document.getElementById("prev")
+      const nextButton = document.getElementById("next")
+      const submitButton = document.getElementById("submit")
+      const progressBar = document.getElementById("progress-bar")
+      const progressNumber = document.querySelector(".progress-number")
+      const errorMessage = document.getElementById("error-message")
+      const main = document.querySelector("main")
+      // const formElement = document.querySelector("form")
+      // const hiddenCart = document.createElement("input")
+      // hiddenCart.type = "hidden"
+      // hiddenCart.name = "cart"
+      // hiddenCart.value = JSON.stringify(cart)
+      // formElement.appendChild(hiddenCart)
+      // This way you don't have to encode/decode the cart
+      // But, that's a good practice to know
 
-  const steps = document.querySelectorAll(".form-step")
-  const prevButton = document.getElementById("prev")
-  const nextButton = document.getElementById("next")
-  const submitButton = document.getElementById("submit")
-  const progressBar = document.getElementById("progress-bar")
-  const progressNumber = document.querySelector(".progress-number")
-  const errorMessage = document.getElementById("error-message")
-  const main = document.querySelector("main")
-  // const formElement = document.querySelector("form")
-  // const hiddenCart = document.createElement("input")
-  // hiddenCart.type = "hidden"
-  // hiddenCart.name = "cart"
-  // hiddenCart.value = JSON.stringify(cart)
-  // formElement.appendChild(hiddenCart)
-  // This way you don't have to encode/decode the cart
-  // But, that's a good practice to know
+      let currentStep = 0
 
-  let currentStep = 0
+      if (storedStep && !error) {
+        updateDOM(Number(storedStep))
+      }
 
-  if (storedStep && !error) {
-    updateDOM(Number(storedStep))
-  }
+      prevButton.addEventListener("click", prevHandler)
+      nextButton.addEventListener("click", nextHandler)
+      submitButton.addEventListener("click", submitHandler)
 
-  prevButton.addEventListener("click", prevHandler)
-  nextButton.addEventListener("click", nextHandler)
-  submitButton.addEventListener("click", submitHandler)
+      function prevHandler() {
+        steps.forEach((step) => {
+          step.style.setProperty("view-transition-name", "slide-right")
+        })
+        if (currentStep === steps.length - 1) {
+          alert("DON'T YOU DARE GO BACK!")
+          return
+        }
 
-  function prevHandler() {
-    steps.forEach((step) => {
-      step.style.setProperty("view-transition-name", "slide-right")
-    })
-    if (currentStep === steps.length - 1) {
-      alert("DON'T YOU DARE GO BACK!")
-      return
-    }
+        transitionHelper({
+          classNames: ["back-transition"],
+          updateDOM: () => updateDOM(currentStep - 1),
+        })
+      }
 
-    transitionHelper({
-      classNames: ["back-transition"],
-      updateDOM: () => updateDOM(currentStep - 1),
-    })
-  }
+      function nextHandler() {
+        steps.forEach((step) => {
+          step.style.setProperty("view-transition-name", "slide-left")
+        })
 
-  function nextHandler() {
-    steps.forEach((step) => {
-      step.style.setProperty("view-transition-name", "slide-left")
-    })
+        if (validateStep(currentStep)) {
+          error = null
+          transitionHelper({
+            classNames: ["success-transition"],
+            updateDOM: () => updateDOM(currentStep + 1),
+          })
+        } else {
+          showError("Please fill out all fields")
+        }
+      }
 
-    if (validateStep(currentStep)) {
-      error = null
-      transitionHelper({
-        classNames: ["success-transition"],
-        updateDOM: () => updateDOM(currentStep + 1),
-      })
-    } else {
-      showError("Please fill out all fields")
-    }
-  }
+      function submitHandler(e) {
+        if (validateStep(currentStep)) {
+          submitForm()
+        } else {
+          e.preventDefault()
+          showError("Please fill out all fields")
+        }
+      }
+      function submitForm() {
+        alert("Form submitted!")
+        main.style.backgroundColor = "blue"
+        transitionHelper({
+          classNames: ["success-transition"],
+          updateDOM: () => updateDOM(currentStep + 1),
+        })
+      }
 
-  function submitHandler(e) {
-    if (validateStep(currentStep)) {
-      submitForm()
-    } else {
-      e.preventDefault()
-      showError("Please fill out all fields")
-    }
-  }
-  function submitForm() {
-    alert("Form submitted!")
-    main.style.backgroundColor = "blue"
-    transitionHelper({
-      classNames: ["success-transition"],
-      updateDOM: () => updateDOM(currentStep + 1),
-    })
-  }
+      function animateNumberTween({ from, to, duration, onUpdate }) {
+        const startTime = Date.now()
+        const endTime = startTime + duration
+        const change = to - from
 
-  function animateNumberTween({ from, to, duration, onUpdate }) {
-    const startTime = Date.now()
-    const endTime = startTime + duration
-    const change = to - from
+        function update() {
+          const now = Date.now()
+          const timeLeft = endTime - now
+          const progress = 1 - timeLeft / duration
+          const value = from + change * progress
+          onUpdate(value)
+          if (now < endTime) {
+            requestAnimationFrame(update)
+          }
+        }
 
-    function update() {
-      const now = Date.now()
-      const timeLeft = endTime - now
-      const progress = 1 - timeLeft / duration
-      const value = from + change * progress
-      onUpdate(value)
-      if (now < endTime) {
         requestAnimationFrame(update)
       }
-    }
 
-    requestAnimationFrame(update)
-  }
-
-  function showError(message) {
-    const transition = transitionHelper({
-      classNames: ["error-transition"],
-      updateDOM: () => {
-        errorMessage.textContent = message
-        errorMessage.classList.add("active")
-      },
-    })
-
-    transition.ready.finally(() => {
-      errorMessage.style.scale = 1
-    })
-
-    transition.finished.finally(() => {
-      setTimeout(() => {
-        errorMessage.style.scale = 0
-        const inputs = steps[currentStep].querySelectorAll("input")
-        inputs.forEach((input) => {
-          input.classList.remove("error")
+      function showError(message) {
+        const transition = transitionHelper({
+          classNames: ["error-transition"],
+          updateDOM: () => {
+            errorMessage.textContent = message
+            errorMessage.classList.add("active")
+          },
         })
-      }, 2400)
-      setTimeout(() => {
-        errorMessage.classList.remove("active")
-      }, 3000)
-    })
-  }
 
-  function validateStep(step) {
-    let isValid = true
-    const inputs = steps[step].querySelectorAll("input")
-    inputs.forEach((input) => {
-      if (!input.value) {
-        input.classList.add("error")
-        isValid = false
-      } else {
-        input.classList.remove("error")
+        transition.ready.finally(() => {
+          errorMessage.style.scale = 1
+        })
+
+        transition.finished.finally(() => {
+          setTimeout(() => {
+            errorMessage.style.scale = 0
+            const inputs = steps[currentStep].querySelectorAll("input")
+            inputs.forEach((input) => {
+              input.classList.remove("error")
+            })
+          }, 2400)
+          setTimeout(() => {
+            errorMessage.classList.remove("active")
+          }, 3000)
+        })
       }
-    })
-    return isValid
-  }
 
-  function transitionHelper({
-    skipTransition = false,
-    classNames = [],
-    updateDOM,
-  }) {
-    if (skipTransition || !document.startViewTransition) {
-      const updateCallbackDone = Promise.resolve(updateDOM()).then(() => {})
-
-      return {
-        ready: Promise.reject(Error("View transitions unsupported")),
-        updateCallbackDone,
-        finished: updateCallbackDone,
-        skipTransition: () => {},
+      function validateStep(step) {
+        let isValid = true
+        const inputs = steps[step].querySelectorAll("input")
+        inputs.forEach((input) => {
+          if (!input.value) {
+            input.classList.add("error")
+            isValid = false
+          } else {
+            input.classList.remove("error")
+          }
+        })
+        return isValid
       }
-    }
 
-    main.classList.add(...classNames)
-    const transition = document.startViewTransition(updateDOM)
-    transition.finished.finally(() => main.classList.remove(...classNames))
-    return transition
-  }
+      function transitionHelper({
+        skipTransition = false,
+        classNames = [],
+        updateDOM,
+      }) {
+        if (skipTransition || !document.startViewTransition) {
+          const updateCallbackDone = Promise.resolve(updateDOM()).then(() => {})
 
-  function updateDOM(newStep) {
-    if (newStep < 0 || newStep >= steps.length) return
-    if (newStep === currentStep) return
-    steps[currentStep].classList.remove("active")
-    steps[newStep].classList.add("active")
-    currentStep = newStep
+          return {
+            ready: Promise.reject(Error("View transitions unsupported")),
+            updateCallbackDone,
+            finished: updateCallbackDone,
+            skipTransition: () => {},
+          }
+        }
 
-    prevButton.style.display = currentStep === 0 ? "none" : "inline-block"
-    nextButton.style.display =
-      currentStep === steps.length - 1 ? "none" : "inline-block"
-    submitButton.style.display =
-      currentStep === steps.length - 1 ? "inline-block" : "none"
+        main.classList.add(...classNames)
+        const transition = document.startViewTransition(updateDOM)
+        transition.finished.finally(() => main.classList.remove(...classNames))
+        return transition
+      }
 
-    progressBar.style.width = `${(currentStep / (steps.length - 1)) * 100}%`
-    progressBar.style.backgroundColor =
-      currentStep === steps.length - 1 ? "green" : "#333"
+      function updateDOM(newStep) {
+        if (newStep < 0 || newStep >= steps.length) return
+        if (newStep === currentStep) return
+        steps[currentStep].classList.remove("active")
+        steps[newStep].classList.add("active")
+        currentStep = newStep
 
-    animateNumberTween({
-      from: Number(progressNumber.textContent.replace("%", "")),
-      to: (currentStep / (steps.length - 1)) * 100,
-      duration: 500,
-      onUpdate: (value) => {
-        value = Math.max(0, Math.min(100, value))
-        progressNumber.textContent = `${Math.round(value)}%`
-        progressNumber.style.left = `${value}%`
-      },
-    })
-  }
+        prevButton.style.display = currentStep === 0 ? "none" : "inline-block"
+        nextButton.style.display =
+          currentStep === steps.length - 1 ? "none" : "inline-block"
+        submitButton.style.display =
+          currentStep === steps.length - 1 ? "inline-block" : "none"
 
-  updateDOM(currentStep)
+        progressBar.style.width = `${(currentStep / (steps.length - 1)) * 100}%`
+        progressBar.style.backgroundColor =
+          currentStep === steps.length - 1 ? "green" : "#333"
 
-  navigation.addEventListener("navigate", (e) => {
-    const form = document.querySelector("form")
-    if (!form) return
-    const inputs = document.querySelectorAll("input")
-    const values = {}
-    inputs.forEach((input) => {
-      if (input.name === "cart") return
-      values[input.name] = input.value
-    })
-    localStorage.setItem("formValues", JSON.stringify(values))
-    localStorage.setItem("step", currentStep)
+        animateNumberTween({
+          from: Number(progressNumber.textContent.replace("%", "")),
+          to: (currentStep / (steps.length - 1)) * 100,
+          duration: 500,
+          onUpdate: (value) => {
+            value = Math.max(0, Math.min(100, value))
+            progressNumber.textContent = `${Math.round(value)}%`
+            progressNumber.style.left = `${value}%`
+          },
+        })
+      }
+
+      updateDOM(currentStep)
+
+      navigation.addEventListener("navigate", (e) => {
+        const form = document.querySelector("form")
+        if (!form) return
+        const inputs = document.querySelectorAll("input")
+        const values = {}
+        inputs.forEach((input) => {
+          if (input.name === "cart") return
+          values[input.name] = input.value
+        })
+        localStorage.setItem("formValues", JSON.stringify(values))
+        localStorage.setItem("step", currentStep)
+      })
+
+      function checkEnter(e) {
+        if (e.key === "Enter") {
+          if (currentStep === steps.length - 1 && validateStep(currentStep)) {
+            submitForm()
+          } else {
+            nextHandler()
+          }
+        }
+      }
+
+      document.addEventListener("keydown", checkEnter)
+    },
   })
-
-  function checkEnter(e) {
-    if (e.key === "Enter") {
-      if (currentStep === steps.length - 1 && validateStep(currentStep)) {
-        submitForm()
-      } else {
-        nextHandler()
-      }
-    }
-  }
-
-  document.addEventListener("keydown", checkEnter)
 }

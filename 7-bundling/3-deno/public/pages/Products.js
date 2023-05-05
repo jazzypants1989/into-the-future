@@ -10,19 +10,20 @@ import { getProducts } from "store"
 export default async function ProductsPage() {
   const products = await getProducts()
   if (!products) {
-    render(`
-      <h1>Products</h1>
-      <p>There was an error loading the products. Please try again later.</p>
-    `)
+    render({
+      component: `<h1>Products</h1>
+      <p>There was an error loading the products. Please try again later.</p>`,
+    })
     return
   }
   document.title = "Products"
   const productsHTML = Object.values(products)
     .map((product) => ProductComponent(product))
     .join("")
-  render(`
-    <h1>Products</h1>
+  render({
+    component: `<h1>Products</h1>
     <div class="products">${productsHTML}</div>
-  `)
-  buttonFinderAdd()
+  `,
+    callback: buttonFinderAdd,
+  })
 }

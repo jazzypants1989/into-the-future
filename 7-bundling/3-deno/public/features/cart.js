@@ -1,5 +1,5 @@
-import Cart from "../pages/Cart.js"
-import * as _Types from "../types.js"
+import Cart from "Cart"
+import * as _Types from "Types"
 
 /**
  * The cart object. This is stored in localStorage.
@@ -11,28 +11,15 @@ export let cart = JSON.parse(localStorage.getItem("cart") || "{}")
 /**
  * Initializes the cart. Checks localStorage, then adds the cart count and cart amount to the header.
  * @returns {void}
- * @example
- * updateCart()
- * // => <span id="cart-count">1</span>
- * // => <span id="cart-total">$10.00</span>
- * @example
- * cart = {}
- * updateCart()
- * // => <span id="cart-count">0</span>
- * // => <span id="cart-total">$0.00</span>
  */
 export default function updateCart() {
   cart = JSON.parse(localStorage.getItem("cart") || "{}")
-  /**
-   * The cart count element in the header.
-   * @type {HTMLSpanElement | null}
-   */
+
+  /** @type {HTMLSpanElement | null} */
   const cartCount = document.querySelector("#cart-count")
-  /**
-   * The cart amount element in the header.
-   * @type {HTMLSpanElement | null}
-   */
+  /** @type {HTMLSpanElement | null} */
   const cartAmount = document.querySelector("#cart-total")
+
   cartCount ? (cartCount.innerText = Object.keys(cart).length.toString()) : null
   cartAmount
     ? (cartAmount.innerText =

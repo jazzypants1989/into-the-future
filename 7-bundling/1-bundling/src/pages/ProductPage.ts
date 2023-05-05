@@ -17,10 +17,12 @@ export default async function ProductPage(id?: string) {
   document.title = product.title
   search.value = product.title
   product
-    ? render(`
-    <h1>${product.title}</h1>
-    ${ProductComponent(product)}
-    `)
+    ? render({
+        component: `
+<h1>${product.title}</h1>
+${ProductComponent(product)}
+`,
+        callback: buttonFinderAdd,
+      })
     : Nope("badID", id)
-  buttonFinderAdd()
 }

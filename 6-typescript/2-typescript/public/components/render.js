@@ -2,10 +2,21 @@ import { addToCart, removeFromCart } from "../features/cart.js";
 import { getProducts } from "./store.js";
 import { main } from "./Router.js";
 import Nope from "../pages/Nope.js";
-export default function render(component) {
-    if (!main)
-        throw new Error("No main element found");
-    main.innerHTML = component;
+export default function render({ component, callback }) {
+    addOldActiveClass();
+    transitionHelper({
+        updateDOM: () => {
+            if (!main)
+                throw new Error("No main element found");
+            if (!component)
+                Nope("error", "No component provided");
+            main.innerHTML = component;
+            main.scrollTop = 0;
+            addNewActiveClass();
+            if (callback)
+                callback();
+        },
+    });
 }
 export async function buttonFinderAdd() {
     const products = await getProducts();
@@ -35,6 +46,8 @@ export async function buttonFinderRemove() {
         button.alreadyAdded = true;
         button.addEventListener("click", (e) => {
             const target = e.target;
+            if (!target || !isFancyButton(target))
+                return;
             const id = target.id;
             const product = products.find((product) => product.id === Number(id));
             if (!product) {
@@ -44,4 +57,56 @@ export async function buttonFinderRemove() {
             removeFromCart(product);
         });
     });
+}
+function isFancyButton(target) {
+    return "alreadyAdded" in target;
+}
+function transitionHelper({ skipTransition = false, classNames = [], updateDOM = () => { }, }) {
+    if (skipTransition || !document.startViewTransition) {
+        const updateCallbackDone = Promise.resolve(updateDOM());
+        return {
+            ready: Promise.reject(Error("View transitions unsupported")),
+            updateCallbackDone,
+            finished: updateCallbackDone,
+        };
+    }
+    const transition = document.startViewTransition(updateDOM);
+    // transition.finished.finally(() => {
+    //   removeActiveClass()
+    // })
+    return transition;
+}
+let clickedImage = false;
+let oldImage = null;
+document.addEventListener("click", (e) => {
+    const element = e.target;
+    if (element.tagName === "IMG" ||
+        element.parentNode instanceof HTMLAnchorElement) {
+        clickedImage = true;
+        if (element.tagName === "IMG") {
+            oldImage = element;
+        }
+        else {
+            const image = element.parentNode?.querySelector("img");
+            if (image)
+                oldImage = image;
+        }
+    }
+    else {
+        clickedImage = false;
+    }
+});
+function addOldActiveClass() {
+    if (!clickedImage || !oldImage)
+        return;
+    oldImage.style.viewTransitionName = "activeImage";
+}
+function addNewActiveClass() {
+    if (!clickedImage)
+        return;
+    const newImage = document.querySelector("img");
+    if (newImage) {
+        newImage.classList.add("activeImage");
+        newImage.style.viewTransitionName = "activeImage";
+    }
 }

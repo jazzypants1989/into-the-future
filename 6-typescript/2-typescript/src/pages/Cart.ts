@@ -6,15 +6,17 @@ export default async function Cart() {
   document.title = "Cart"
   const products = await getProducts()
   if (Object.keys(cart).length === 0) {
-    render(`
+    render({
+      component: `
           <h1>Cart</h1>
           <p>Your cart is empty. Go buy some weird stuff!</p>
-          `)
+          `,
+    })
   } else {
     const cartItems = Object.keys(cart).map((id) => {
       const product = products.find((product) => product.id === Number(id))
       return `
-            <div class="cart-item">
+            <div class="product">
               <img src="${product?.thumbnail}" alt="${product?.title}" />
               <h2>${product?.title}</h2>
               <p>$${product?.price}</p>
@@ -23,10 +25,12 @@ export default async function Cart() {
             </div>
             `
     })
-    render(`
+    render({
+      component: `
           <h1>Cart</h1>
           ${cartItems.join("")}
-          `)
-    buttonFinderRemove()
+          `,
+      callback: buttonFinderRemove,
+    })
   }
 }

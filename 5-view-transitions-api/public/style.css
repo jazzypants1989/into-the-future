@@ -1,3 +1,7 @@
+:root {
+  view-transition-name: none;
+}
+
 body {
   position: absolute;
   overflow: hidden;
@@ -92,11 +96,11 @@ footer {
   width: 100%;
   position: absolute;
   background-color: #222;
+  view-transition-name: none;
 }
 
 nav {
   top: 0;
-  view-transition-name: nav;
   z-index: 1;
 }
 
@@ -115,8 +119,14 @@ main {
   margin-top: 4.5rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
-  view-transition-name: none;
+  view-transition-name: main;
   transition: background-color 0.5s;
+}
+
+.product {
+  border-width: 3px 0px 0px 0px;
+  border-style: solid;
+  padding: 1rem;
 }
 
 img {
@@ -131,16 +141,17 @@ img {
 }
 
 .spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100px;
   height: 100px;
+  margin: 0 auto;
   border: 10px solid #f3f3f3;
-  border-top: 10px solid #3498db;
+  border-top: 10px solid #f0f;
   border-radius: 50%;
   animation: spin 2s linear infinite;
+}
+
+main:has(.spinner) {
+  height: 100vh;
 }
 
 .error {
@@ -155,7 +166,6 @@ img {
 
 footer {
   bottom: 0;
-  view-transition-name: footer;
 }
 
 h1 {
@@ -174,7 +184,7 @@ h1 {
   padding: 30px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  view-transition-name: none;
+  view-transition-name: form;
 }
 
 #search {
@@ -281,7 +291,7 @@ button {
 
 ::view-transition-group(activeImage),
 ::view-transition-group(h1) {
-  animation-duration: 0.5s;
+  animation-duration: 0.75s;
 }
 
 ::view-transition-old(activeImage),
@@ -291,7 +301,7 @@ button {
 
 ::view-transition-new(activeImage) {
   opacity: 1;
-  animation: scaleUp 0.5s ease-in-out;
+  animation: scaleUp 0.75s ease-in-out;
 }
 
 ::view-transition-new(h1) {
@@ -299,11 +309,11 @@ button {
   animation: none;
 }
 
-::view-transition-old(root) {
+::view-transition-old(main) {
   animation: slide-left 0.75s ease-in-out;
 }
 
-::view-transition-new(root) {
+::view-transition-new(main) {
   animation: slide-right 0.75s ease-in-out;
 }
 
@@ -344,7 +354,7 @@ button {
 }
 
 ::view-transition-group(root) {
-  animation-duration: 0.8s;
+  animation-duration: 0.5s;
 }
 
 ::view-transition-group(prev),
@@ -419,5 +429,9 @@ button {
 
   #hamburger {
     display: block;
+  }
+
+  #toggleTheme {
+    margin-right: 0;
   }
 }

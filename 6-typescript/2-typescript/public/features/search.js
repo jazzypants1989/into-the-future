@@ -15,11 +15,13 @@ export async function searchHandler() {
         return product.title.toLowerCase().includes(searchValue.toLowerCase());
     });
     if (filteredProducts.length === 0) {
-        render(`<h1>Products</h1><p>No Products Found</p>`);
+        render({ component: `<h1>Products</h1><p>No Products Found</p>` });
     }
     else {
         const productsHTML = filteredProducts.map(ProductComponent).join("");
-        render(`<h1>Products</h1>${productsHTML}`);
-        buttonFinderAdd();
+        render({
+            component: `<h1>Products</h1>${productsHTML}`,
+            callback: buttonFinderAdd,
+        });
     }
 }

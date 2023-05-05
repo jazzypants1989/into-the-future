@@ -2,8 +2,9 @@ import { Route } from "./Routes.js";
 import { searchHandler, search } from "../features/search.js";
 import { createSpinner } from "./store.js";
 import Nope from "../pages/Nope.js";
+import render from "./render.js";
 export const main = document.querySelector(".main");
-export default function Router(navigateEvent) {
+export default async function Router(navigateEvent) {
     if (shouldNotIntercept(navigateEvent)) {
         console.log("shouldNotIntercept");
         return;
@@ -39,47 +40,40 @@ export default function Router(navigateEvent) {
     // Route
     navigateEvent
         ? navigateEvent.intercept({
+            scroll: "manual",
             async handler() {
                 navigateEvent.signal.onabort = () => {
-                    console.log("aborted");
-                    if (main && mainHTML) {
-                        main.innerHTML = mainHTML;
-                    }
+                    if (!main)
+                        return;
+                    main.innerHTML = mainHTML || "";
                 };
                 try {
-                    addOldActiveClass();
-                    transitionHelper({
-                        updateDOM: async () => {
-                            await Route(path);
-                            addNewActiveClass();
-                        },
-                    });
-                    // document.startViewTransition(async () => {
-                    //   await Route(path)
-                    // })
+                    await Route(path);
                 }
                 catch (error) {
                     console.error("error", error);
-                    Nope("error", error.message);
+                    if (!main)
+                        return;
+                    Nope("error", "Something went wrong. Super helpful, I know.");
                 }
             },
         })
-        : transitionHelper({
-            updateDOM: async () => {
-                await Route(path);
-            },
-        });
-    // : document.startViewTransition(async () => Route(path))
+        : await Route(path);
 }
 window.navigation.addEventListener("navigate", Router);
 function checkAndReplaceHTML(event, mainHTML, spinner, time) {
-    if (event && event.destination.url === location.href)
-        return;
     if (event && event.formData)
         return;
     setTimeout(() => {
-        if (main && mainHTML === main.innerHTML) {
-            main.innerHTML = spinner.outerHTML;
+        if (mainHTML === main?.innerHTML) {
+            if (!main)
+                return;
+            document.title = "Loading...";
+            const heading = document.createElement("h1");
+            heading.textContent = "Loading...";
+            render({
+                component: heading.outerHTML + spinner.outerHTML,
+            });
         }
     }, time);
 }
@@ -90,53 +84,4 @@ function shouldNotIntercept(navigateEvent) {
         navigateEvent.hashChange ||
         navigateEvent.downloadRequest ||
         navigateEvent.formData);
-}
-function transitionHelper({ skipTransition = false, classNames = [], updateDOM = () => { }, }) {
-    if (skipTransition || !document.startViewTransition) {
-        const updateCallbackDone = Promise.resolve(updateDOM());
-        return {
-            ready: Promise.reject(Error("View transitions unsupported")),
-            updateCallbackDone,
-            finished: updateCallbackDone,
-        };
-    }
-    const transition = document.startViewTransition(updateDOM);
-    // transition.finished.finally(() => {
-    //   removeActiveClass()
-    // })
-    return transition;
-}
-let clickedImage = false;
-let oldImage = null;
-document.addEventListener("click", (e) => {
-    const element = e.target;
-    if (element.tagName === "IMG" ||
-        element.parentNode instanceof HTMLAnchorElement) {
-        clickedImage = true;
-        if (element.tagName === "IMG") {
-            oldImage = element;
-        }
-        else {
-            const image = element.parentNode?.querySelector("img");
-            if (image)
-                oldImage = image;
-        }
-    }
-    else {
-        clickedImage = false;
-    }
-});
-function addOldActiveClass() {
-    if (!clickedImage || !oldImage)
-        return;
-    oldImage.style.viewTransitionName = "activeImage";
-}
-function addNewActiveClass() {
-    if (!clickedImage)
-        return;
-    const newImage = document.querySelector("img");
-    if (newImage) {
-        newImage.classList.add("activeImage");
-        newImage.style.viewTransitionName = "activeImage";
-    }
 }

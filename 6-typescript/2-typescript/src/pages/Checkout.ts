@@ -20,6 +20,11 @@ function createLineItems() {
 }
 
 async function createSession() {
+  const checkoutButton = document.getElementById(
+    "checkout"
+  ) as HTMLButtonElement
+  checkoutButton.disabled = true
+  checkoutButton.textContent = "Redirecting you to Stripe... HOLD YOUR HORSES!"
   const response = await fetch("/create-checkout-session", {
     method: "POST",
     headers: {
@@ -54,8 +59,16 @@ const renderCartItems = () => {
   return cartItems.join("")
 }
 
+function sessionListener() {
+  const checkoutButton = document.getElementById(
+    "checkout"
+  ) as HTMLButtonElement
+  checkoutButton.addEventListener("click", createSession)
+}
+
 export default function Checkout() {
-  render(`
+  render({
+    component: `
     <div>
       <h1>Checkout</h1>
       ${renderCartItems()}
@@ -66,6 +79,7 @@ export default function Checkout() {
       )}</p>
       <button id="checkout">Checkout (Redirect to Stripe)</button>
     </div>
-`)
-  document?.getElementById("checkout")?.addEventListener("click", createSession)
+`,
+    callback: sessionListener,
+  })
 }

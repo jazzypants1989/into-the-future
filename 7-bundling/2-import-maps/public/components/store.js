@@ -37,6 +37,7 @@ export async function getProducts() {
     console.trace("products already loaded")
     return products
   }
+  console.trace("products not loaded")
   const data = await db()
 
   if (data.products) {

@@ -28,6 +28,7 @@
       "hamburger": ["./public/features/hamburger.js"],
       "search": ["./public/features/search.js"],
       "theme": ["./public/features/theme.js"],
+      "calendar": ["./public/features/calendar.js"],
       "About": ["./public/pages/About.js"],
       "Cart": ["./public/pages/Cart.js"],
       "Checkout": ["./public/pages/Checkout.js"],

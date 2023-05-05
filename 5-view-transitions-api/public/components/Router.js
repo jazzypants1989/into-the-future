@@ -1,10 +1,11 @@
 import { Route } from "./Routes.js"
 import { searchHandler, search } from "../features/search.js"
 import { createSpinner } from "./store.js"
+import render from "./render.js"
 
 export const main = document.querySelector(".main")
 
-export default function Router(navigateEvent) {
+export default async function Router(navigateEvent) {
   if (shouldNotIntercept(navigateEvent)) {
     console.log("shouldNotIntercept")
     return
@@ -22,7 +23,7 @@ export default function Router(navigateEvent) {
     navigateEvent.intercept({
       handler() {
         alert("We're already here! Silly Billy! *honk honk* 🤡 (that's you)")
-        event.preventDefault()
+        navigateEvent.preventDefault()
       },
     })
     return
@@ -33,7 +34,7 @@ export default function Router(navigateEvent) {
   // Start Spinner
   const spinner = createSpinner()
   const mainHTML = main.innerHTML
-  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 300)
+  checkAndReplaceHTML(mainHTML, spinner, 200)
 
   // Check for search
   if (searchValue) {
@@ -51,37 +52,24 @@ export default function Router(navigateEvent) {
           }
 
           try {
-            addOldActiveClass()
-            transitionHelper({
-              updateDOM: async () => {
-                await Route(path)
-                addNewActiveClass()
-              },
-            })
-            // document.startViewTransition(async () => {
-            //   await Route(path)
-            // })
+            await Route(path)
           } catch (error) {
             console.error("error", error)
-            main.innerHTML = Nope("error", error)
+            Nope("error", error)
           }
         },
       })
-    : transitionHelper({
-        updateDOM: async () => {
-          await Route(path)
-        },
-      })
-  // : document.startViewTransition(async () => Route(path))
+    : await Route(path)
 }
 
 navigation.addEventListener("navigate", Router)
 
-function checkAndReplaceHTML(event, mainHTML, spinner, time) {
-  if (event && event.formData) return
+function checkAndReplaceHTML(mainHTML, spinner, time) {
   setTimeout(() => {
     if (mainHTML === main.innerHTML) {
-      main.innerHTML = spinner.outerHTML
+      const heading = document.createElement("h1")
+      heading.textContent = "Loading..."
+      render({ component: heading.outerHTML + spinner.outerHTML })
     }
   }, time)
 }
@@ -95,61 +83,3 @@ function shouldNotIntercept(navigateEvent) {
     navigateEvent.formData
   )
 }
-
-function transitionHelper({
-  skipTransition = false,
-  classNames = [],
-  updateDOM,
-}) {
-  if (skipTransition || !document.startViewTransition) {
-    const updateCallbackDone = Promise.resolve(updateDOM())
-
-    return {
-      ready: Promise.reject(Error("View transitions unsupported")),
-      updateCallbackDone,
-      finished: updateCallbackDone,
-    }
-  }
-  const transition = document.startViewTransition(updateDOM)
-
-  // transition.finished.finally(() => {
-  //   removeActiveClass()
-  // })
-
-  return transition
-}
-
-let clickedImage = false
-let oldImage = null
-
-document.addEventListener("click", (e) => {
-  if (e.target.tagName === "IMG" || e.target.parentNode.tagName === "A") {
-    clickedImage = true
-    if (e.target.tagName === "IMG") {
-      oldImage = e.target
-    } else {
-      oldImage = e.target.parentNode.querySelector("img")
-    }
-  } else {
-    clickedImage = false
-  }
-})
-
-function addOldActiveClass() {
-  if (!clickedImage) return
-  oldImage.style.viewTransitionName = "activeImage"
-}
-
-function addNewActiveClass() {
-  if (!clickedImage) return
-  const newImage = document.querySelector("img")
-  newImage.style.viewTransitionName = "activeImage"
-  newImage.classList.add("activeImage")
-}
-
-// function removeActiveClass() {
-//   if (!clickedImage) return
-//   const newImage = document.querySelector("img")
-//   oldImage ?? (oldImage.style.viewTransitionName = "")
-//   newImage ?? (newImage.style.viewTransitionName = "")
-// }

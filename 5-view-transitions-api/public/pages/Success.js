@@ -32,9 +32,8 @@ export default function Success() {
   const total = params.get("total")
   const address = params.get("address")
 
-  updateCart()
-
-  render(`
+  render({
+    component: `
   <h1>Success</h1>
     <p>Thank you for your purchase!</p>
     <p>Order Summary:</p>
@@ -45,5 +44,6 @@ export default function Success() {
     <div class="cart-items">
       ${cartItems.join("")}
     </div>
-  `)
+  `,
+  })
 }

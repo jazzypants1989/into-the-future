@@ -1,6 +1,7 @@
 import { Route } from "Routes"
 import { searchHandler, search } from "search"
 import { createSpinner } from "store"
+import render from "render"
 import Nope from "Nope"
 
 /**
@@ -12,9 +13,9 @@ export const main = document.querySelector(".main")
 /**
  * The Central Router of the app
  * @param {NavigateEvent} [navigateEvent]
- * @returns {void}
+ * @returns {Promise<void>}
  */
-export default function Router(navigateEvent) {
+export default async function Router(navigateEvent) {
   if (shouldNotIntercept(navigateEvent)) {
     console.log("shouldNotIntercept")
     return
@@ -24,7 +25,6 @@ export default function Router(navigateEvent) {
   const url = navigateEvent ? navigateEvent.destination.url : location.href
   const newURL = new URL(url)
   const path = newURL.pathname
-  const originURLPath = new URL(location.href).pathname
 
   // Close the mobile menu if it's open
   const nav = document.querySelector("nav")
@@ -33,7 +33,7 @@ export default function Router(navigateEvent) {
   navOpen && mediaQuery.matches ? (nav.style.display = "none") : null
 
   // Check if the path is the same as the origin path
-  if (navigateEvent && path === originURLPath) {
+  if (navigateEvent && path === location.pathname) {
     navigateEvent.preventDefault()
     main?.scrollTo({ top: 0, behavior: "smooth" })
     return
@@ -65,15 +65,7 @@ export default function Router(navigateEvent) {
           }
 
           try {
-            addOldActiveClass()
-            await transitionHelper({
-              updateDOM: async () => {
-                await Route(path)
-
-                window.scrollTo({ top: 0, behavior: "smooth" })
-                addNewActiveClass()
-              },
-            })
+            await Route(path)
           } catch (error) {
             console.error("error", error)
             if (!main) return
@@ -81,11 +73,7 @@ export default function Router(navigateEvent) {
           }
         },
       })
-    : transitionHelper({
-        updateDOM: async () => {
-          await Route(path)
-        },
-      })
+    : await Route(path)
 }
 
 window.navigation.addEventListener("navigate", Router)
@@ -101,8 +89,14 @@ window.navigation.addEventListener("navigate", Router)
 function checkAndReplaceHTML(event, mainHTML, spinner, time) {
   if (event && event.formData) return
   setTimeout(() => {
-    if (mainHTML === main?.innerHTML && main) {
-      main.innerHTML = spinner.outerHTML
+    if (mainHTML === main?.innerHTML) {
+      if (!main) return
+      document.title = "Loading..."
+      const heading = document.createElement("h1")
+      heading.textContent = "Loading..."
+      render({
+        component: heading.outerHTML + spinner.outerHTML,
+      })
     }
   }, time)
 }
@@ -120,69 +114,4 @@ function shouldNotIntercept(navigateEvent) {
     navigateEvent.downloadRequest ||
     navigateEvent.formData
   )
-}
-
-/**
- * Helper function to handle view transitions
- * @param {object} options
- * @param {boolean} [options.skipTransition]
- * @param {string[]} [options.classNames]
- * @param {() => void} options.updateDOM
- * @returns {ViewTransition}
- */
-function transitionHelper({ skipTransition = false, updateDOM }) {
-  if (skipTransition || !document.startViewTransition) {
-    const updateCallbackDone = Promise.resolve(updateDOM())
-
-    return {
-      ready: Promise.reject(Error("View transitions unsupported")),
-      updateCallbackDone,
-      finished: updateCallbackDone,
-      skipTransition: () => {},
-    }
-  }
-  const transition = document.startViewTransition(updateDOM)
-
-  return transition
-}
-
-/**
- * @type {boolean}
- */
-let clickedImage = false
-/**
- * @type {HTMLImageElement | null}
- */
-let oldImage = null
-
-document.addEventListener("click", (e) => {
-  let element = e.target
-  if (
-    element instanceof HTMLImageElement ||
-    element instanceof HTMLHeadingElement
-  ) {
-    if (element instanceof HTMLHeadingElement && element.parentNode) {
-      element = element.parentNode.querySelector("img")
-    }
-    if (element instanceof HTMLImageElement) {
-      oldImage = element
-      clickedImage = true
-    }
-  } else {
-    clickedImage = false
-  }
-})
-
-function addOldActiveClass() {
-  if (!clickedImage || !oldImage) return
-  oldImage.style.viewTransitionName = "activeImage"
-}
-
-function addNewActiveClass() {
-  if (!clickedImage) return
-  const newImage = document.querySelector("img")
-  if (!newImage) return
-
-  newImage.classList.add("activeImage")
-  newImage.style.viewTransitionName = "activeImage"
 }

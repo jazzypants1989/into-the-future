@@ -2,14 +2,30 @@ import { addToCart, removeFromCart } from "../features/cart.js"
 import { getProducts } from "./store.js"
 import { main } from "./Router.js"
 import * as Types from "../types.js"
+import Nope from "../pages/Nope.js"
+
+// /**
+//  * @typedef {import("../types.js").Product} Product
+//  */
 
 /**
  * The render function-- renders the component to the main element.
- * @param {string} component - The component to render.
+ * @param {object} options
+ * @param {string} options.component - The component to render.
+ * @param {() => void} [options.callback] - A callback to run after the component has been rendered.
  */
-export default function render(component) {
-  if (!main) throw new Error("No main element found.")
-  main.innerHTML = component
+export default function render({ component, callback }) {
+  addOldActiveClass()
+  transitionHelper({
+    updateDOM: () => {
+      if (!main) throw new Error("No main element found.")
+      if (!component) Nope("error", "No component provided.")
+      main.innerHTML = component
+      main.scrollTop = 0
+      addNewActiveClass()
+      callback ? callback() : null
+    },
+  })
 }
 
 /**
@@ -60,4 +76,65 @@ export async function buttonFinderRemove() {
       removeFromCart(product)
     })
   })
+}
+
+/**
+ * Helper function to handle view transitions
+ * @param {object} options
+ * @param {boolean} [options.skipTransition]
+ * @param {string[]} [options.classNames]
+ * @param {() => void} options.updateDOM
+ * @returns {ViewTransition}
+ */
+export function transitionHelper({ skipTransition = false, updateDOM }) {
+  if (skipTransition || !document.startViewTransition) {
+    const updateCallbackDone = Promise.resolve(updateDOM())
+
+    return {
+      ready: Promise.reject(Error("View transitions unsupported")),
+      updateCallbackDone,
+      finished: updateCallbackDone,
+      skipTransition: () => {},
+    }
+  }
+  const transition = document.startViewTransition(updateDOM)
+
+  return transition
+}
+
+/** @type {boolean} */
+let clickedImage = false
+/** @type {HTMLImageElement | null} */
+let oldImage = null
+
+document.addEventListener("click", (e) => {
+  let element = e.target
+  if (
+    element instanceof HTMLImageElement ||
+    element instanceof HTMLHeadingElement
+  ) {
+    if (element instanceof HTMLHeadingElement && element.parentNode) {
+      element = element.parentNode.querySelector("img")
+    }
+    if (element instanceof HTMLImageElement) {
+      oldImage = element
+      clickedImage = true
+    }
+  } else {
+    clickedImage = false
+  }
+})
+
+function addOldActiveClass() {
+  if (!clickedImage || !oldImage) return
+  oldImage.style.viewTransitionName = "activeImage"
+}
+
+function addNewActiveClass() {
+  if (!clickedImage) return
+  const newImage = document.querySelector("img")
+  if (!newImage) return
+
+  newImage.classList.add("activeImage")
+  newImage.style.viewTransitionName = "activeImage"
 }

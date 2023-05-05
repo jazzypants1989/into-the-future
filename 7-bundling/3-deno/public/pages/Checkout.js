@@ -1,8 +1,6 @@
 import render from "render"
 import { cart } from "cart"
 
-console.log("cart", cart)
-
 function createLineItems() {
   console.log("createLineItems", cart)
   return Object.keys(cart).map((id) => {
@@ -30,6 +28,13 @@ async function stripeLoader() {
 }
 
 async function createSession() {
+  const button = document.querySelector("#checkout")
+  if (!button || !(button instanceof HTMLButtonElement)) {
+    console.error("No checkout button found")
+    return
+  }
+  button.disabled = true
+  button.innerText = "Redirecting to Stripe... Hold your horses!"
   const response = await fetch("/create-checkout-session", {
     method: "POST",
     headers: {
@@ -59,6 +64,13 @@ async function createSession() {
   // location.href = data.session.url
 }
 
+function attachListener() {
+  const checkoutButton = document.querySelector("#checkout")
+  if (checkoutButton) {
+    checkoutButton.addEventListener("click", createSession)
+  }
+}
+
 const renderCartItems = () => {
   const cartItems = Object.keys(cart).map((id) => {
     const idNum = Number(id)
@@ -69,8 +81,8 @@ const renderCartItems = () => {
         <h2>${cart[idNum].product.title}</h3>
       </a>
         <p>${cart[idNum].product.description}</p>
-        <p>$${cart[idNum].product.price}</p>
-        <p>${cart[idNum].quantity}</p>
+        <span>$${cart[idNum].product.price}</span>
+        <span>Quantity: ${cart[idNum].quantity}</span>
       </div>
     `
   })
@@ -78,7 +90,8 @@ const renderCartItems = () => {
 }
 
 export default function Checkout() {
-  render(`
+  render({
+    component: `
     <div>
       <h1>Checkout</h1>
       ${renderCartItems()}
@@ -89,6 +102,7 @@ export default function Checkout() {
       )}</p>
       <button id="checkout">Checkout (Redirect to Stripe)</button>
     </div>
-`)
-  document?.getElementById("checkout")?.addEventListener("click", createSession)
+`,
+    callback: attachListener,
+  })
 }
