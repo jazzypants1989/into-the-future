@@ -18,5 +18,8 @@
     "astro": "^2.4.2",
     "date-fns": "^2.30.0",
     "stripe": "^12.4.0"
+  },
+  "stackblitz": {
+    "startCommand": "npm start"
   }
 }
