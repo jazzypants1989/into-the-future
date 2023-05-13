@@ -1,0 +1,71 @@
+---
+import Layout from "../components/Layout.astro"
+import ProductComponent from "../components/Product.astro"
+import Nope from "../components/Nope.astro"
+import { getProducts } from "../utils/store"
+import type { Product } from "../types"
+
+const products = await getProducts()
+const cartCookie = Astro.cookies.get("cart").value
+const cart = cartCookie ? JSON.parse(cartCookie) : []
+
+if (Astro.request.method === "POST") {
+  let product: Product | undefined
+  const form = await Astro.request.formData()
+  const body = Object.fromEntries(form.entries())
+  if (body.id && typeof body.id === "string") {
+    product = addToCart(body.id)
+  }
+  const param = `?toast=${product?.title}&type=success`
+  return Astro.redirect(`/products${param}`)
+}
+
+function addToCart(id: string) {
+  const product = products.find((product) => product.id === Number(id))
+  if (!product) return
+  if (cart) {
+    const cartItem = cart.find((item: Product) => item.id === product.id)
+    if (cartItem) {
+      cartItem.quantity++
+    } else {
+      cart.push({ ...product, quantity: 1 })
+    }
+    Astro.cookies.set("cart", JSON.stringify(cart), { path: "/" })
+  } else {
+    Astro.cookies.set("cart", JSON.stringify([{ ...product, quantity: 1 }]), {
+      path: "/",
+    })
+  }
+  return product
+}
+---
+
+{products.length === 0 && <Nope id="badFetch" />}
+{
+  products.length > 0 && (
+    <Layout title="Products" description="This is the products page">
+      <h1>Products</h1>
+      <div class="products">
+        {products.map((product) => (
+          <ProductComponent product={product} />
+        ))}
+      </div>
+    </Layout>
+  )
+}
+
+<script>
+  import { addToast } from "../utils/toast.js"
+
+  const params = new URLSearchParams(window.location.search)
+  const toast = params.get("toast")
+  const type = params.get("type")
+
+  if (toast) {
+    if (type === "success") {
+      addToast(`Added ${toast} to cart!`, { type: "success" })
+    } else {
+      addToast(`Hmmm... something went wrong.`, { type: "error" })
+    }
+  }
+</script>

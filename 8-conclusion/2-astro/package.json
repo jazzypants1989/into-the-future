@@ -1,0 +1,22 @@
+{
+  "name": "2-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "^5.1.2",
+    "@fullcalendar/core": "^6.1.6",
+    "@fullcalendar/daygrid": "^6.1.6",
+    "@stripe/stripe-js": "^1.52.1",
+    "@types/dom-view-transitions": "^1.0.1",
+    "astro": "^2.4.2",
+    "date-fns": "^2.30.0",
+    "stripe": "^12.4.0"
+  }
+}

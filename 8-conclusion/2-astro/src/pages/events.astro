@@ -1,0 +1,78 @@
+---
+import Layout from "../components/Layout.astro"
+import { differenceInDays, add } from "date-fns"
+import Calendar from "../components/VanillaCalendar.astro"
+const today = new Date()
+
+const events = [
+  {
+    name: "Murder Mystery Night",
+    start: add(today, { days: 2, hours: 5 }),
+    end: add(today, { days: 2, hours: 8 }),
+  },
+  {
+    name: "Gorgonzola Enthusiasts Conference",
+    start: add(today, { days: 5 }),
+    end: add(today, { days: 7 }),
+  },
+  {
+    name: "Dragon Appreciation Day",
+    start: add(today, { days: 12 }),
+    end: add(today, { days: 12 }),
+  },
+  {
+    name: "Circus Skills Workshop",
+    start: add(today, { days: 15 }),
+    end: add(today, { days: 16 }),
+  },
+  {
+    name: "Couch Sitting Competition",
+    start: add(today, { days: 20 }),
+    end: add(today, { days: 21 }),
+  },
+  {
+    name: "Three Week Rustic Retreat",
+    start: add(today, { days: 22 }),
+    end: add(today, { days: 43 }),
+  },
+]
+---
+
+<Layout title="Events" description="Real things happening at our real store">
+  <h1>Events</h1>
+  <div id="calendar">
+    <Calendar events={events} />
+  </div>
+  <ul class="events-list">
+    {
+      events.map((event) => {
+        const daysRemaining = differenceInDays(event.start, today)
+        return (
+          <li
+            style={{
+              padding: "1rem",
+              backgroundColor: daysRemaining < 7 ? "red" : "green",
+              color: "white",
+              borderRadius: "0.5rem",
+              textAlign: "center",
+              margin: "0.5rem",
+            }}
+          >
+            {event.name} is in {daysRemaining} days
+          </li>
+        )
+      })
+    }
+  </ul>
+</Layout>
+
+<style>
+  .events-list {
+    margin: 2rem auto;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>

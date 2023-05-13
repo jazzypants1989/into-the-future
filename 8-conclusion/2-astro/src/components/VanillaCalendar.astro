@@ -1,0 +1,128 @@
+---
+interface CalendarProps {
+  events: Event[]
+  year: number
+  month: number
+}
+
+interface Event {
+  name: string
+  start: Date
+  end: Date
+}
+
+const {
+  events = [],
+  year = new Date().getFullYear(),
+  month = new Date().getMonth(),
+} = Astro.props as CalendarProps
+
+function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate()
+}
+
+function getFirstDayOfMonth(year: number, month: number) {
+  return new Date(year, month, 1).getDay()
+}
+
+function isEventOnDay(event: Event, year: number, month: number, day: number) {
+  const currentDate = new Date(year, month, day).setHours(0, 0, 0, 0)
+  const eventStart = event.start.setHours(0, 0, 0, 0)
+  const eventEnd = event.end.setHours(0, 0, 0, 0)
+  return currentDate >= eventStart && currentDate <= eventEnd
+}
+
+const daysInMonth = getDaysInMonth(year, month)
+const firstDayOfMonth = getFirstDayOfMonth(year, month)
+
+const calendarDays = Array.from({ length: daysInMonth }, (_, i) => i + 1)
+const calendar = Array.from({ length: firstDayOfMonth })
+  .fill(null)
+  .concat(calendarDays) as number[]
+---
+
+<table class="calendar">
+  <thead>
+    <tr>
+      <th>Sun</th>
+      <th>Mon</th>
+      <th>Tue</th>
+      <th>Wed</th>
+      <th>Thu</th>
+      <th>Fri</th>
+      <th>Sat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {
+        calendar.map((day, index) => {
+          const date = day ? new Date(year, month, day) : null
+          const event = events.find((event) =>
+            isEventOnDay(event, year, month, day)
+          )
+
+          return (
+            <>
+              {index % 7 === 0 ? <tr /> : ""}
+              <td class={`day ${event ? "event" : ""}`}>
+                {date ? date.getDate() : ""}
+                {event ? <div class="event-title">{event.name}</div> : ""}
+              </td>
+            </>
+          )
+        })
+      }
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  .calendar {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .calendar th,
+  .calendar td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .calendar tr:nth-child(even) {
+    background-color: #444;
+  }
+
+  .calendar th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #222;
+    color: white;
+  }
+
+  .calendar .day {
+    position: relative;
+  }
+
+  .calendar .event {
+    background-color: #f44336;
+  }
+
+  .calendar .event-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 4px;
+    font-size: 12px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

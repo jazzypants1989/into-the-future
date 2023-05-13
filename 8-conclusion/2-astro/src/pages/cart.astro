@@ -1,0 +1,87 @@
+---
+import Layout from "../components/Layout.astro"
+import type { CartItem } from "../types"
+
+const cartCookie = Astro.cookies.get("cart").value
+const cart = cartCookie ? JSON.parse(cartCookie) : []
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData()
+  const body = Object.fromEntries(form.entries())
+  const { id } = body
+  if (!id || typeof id !== "string") return Astro.redirect("/cart")
+  const product = removeFromCart(id)
+  const params = `?toast="${product.title} removed from cart&type=sad"`
+  return Astro.redirect("/cart" + params)
+}
+
+function removeFromCart(id: string) {
+  const item = cart.find((item: CartItem) => item.id.toString() === id)
+  if (!item) return
+  if (item.quantity > 1) {
+    const newCart = cart.map((item: CartItem) => {
+      if (item.id.toString() === id) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        }
+      }
+      return item
+    })
+    Astro.cookies.set("cart", JSON.stringify(newCart))
+    return item
+  } else {
+    const newCart = cart.filter((item: CartItem) => item.id.toString() !== id)
+    Astro.cookies.set("cart", JSON.stringify(newCart))
+    return item
+  }
+}
+---
+
+<Layout title="Cart" description="The Cart page!!" />
+<h1>Cart</h1>
+{cart.length === 0 && <p>No items in cart</p>}
+<p>
+  Total: ${cart.reduce((acc: number, item: CartItem) => acc + item.price, 0)}
+</p>
+<ul>
+  {
+    cart.map((product: CartItem) => (
+      <li>
+        <img
+          class="product"
+          src={product.images[0]}
+          alt={product.title}
+          width="300"
+          height="300"
+        />
+        <p>{product.title}</p>
+        <p>${product.price}</p>
+        <p>Quantity: {product.quantity}</p>
+        <form action="/cart" method="POST">
+          <input type="hidden" name="id" value={product.id} />
+          <button type="submit">Remove</button>
+        </form>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  import { addToast } from "../utils/toast.js"
+
+  const url = new URL(window.location.href)
+  const toast = url.searchParams.get("toast")
+  const type = url.searchParams.get("type")
+
+  if (toast) {
+    if (type === "sad") {
+      addToast(toast, {
+        type: "sad",
+        duration: 5000,
+      })
+    } else {
+      addToast(toast)
+    }
+  }
+</script>

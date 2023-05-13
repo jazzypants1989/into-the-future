@@ -1,0 +1,92 @@
+---
+import { getProducts } from "../utils/store.js"
+
+const products = await getProducts()
+---
+
+<div hidden id="secret-products">
+  {products.map((product) => product.title + ", ID: " + product.id + " | ")}
+</div>
+
+<input id="search" type="text" placeholder="Search" />
+<div id="results">
+  <ul id="results-list"></ul>
+</div>
+
+<style>
+  #results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 20%;
+    width: fit-content;
+    background: #222;
+    color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+  }
+
+  #results-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #results-list li {
+    width: 100%;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  #results-list li:last-child {
+    border-bottom: none;
+  }
+
+  #results-list li a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  #results-list li a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const search = document.getElementById("search") as HTMLInputElement
+  const results = document.getElementById("results") as HTMLDivElement
+  const resultsList = document.getElementById(
+    "results-list"
+  ) as HTMLUListElement
+  const products = document.querySelector("#secret-products") as HTMLDivElement
+
+  search.addEventListener("input", () => {
+    const query = search.value.toLowerCase()
+    const filteredProducts = products.innerText
+      .split("|")
+      .filter((product) => product.toLowerCase().includes(query))
+      .map((product) => product.trim())
+      .filter((product) => product !== "")
+
+    resultsList.innerHTML = ""
+    filteredProducts.forEach((product) => {
+      const li = document.createElement("li")
+      const a = document.createElement("a")
+      a.href = `/product/${product?.split(",")[1]?.split(":")[1]?.trim()}`
+      const innerText = product?.split(",")[0]?.trim()
+      a.innerText = innerText ? innerText : ""
+      li.appendChild(a)
+      resultsList.appendChild(li)
+    })
+
+    if (filteredProducts.length > 0) {
+      results.style.display = "block"
+    } else {
+      results.style.display = "none"
+    }
+  })
+</script>

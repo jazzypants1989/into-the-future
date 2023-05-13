@@ -1,0 +1,138 @@
+---
+import Layout from "../components/layout.astro"
+import Stripe from "stripe"
+
+const cartCookie = Astro.cookies.get("cart").value
+const cart = cartCookie ? JSON.parse(cartCookie) : {}
+
+const stripeENV = import.meta.env.STRIPE_SECRET_KEY
+
+if (!stripeENV) {
+  throw new Error("Missing Stripe Secret Key")
+}
+
+if (Astro.request.method === "POST") {
+  const stripe = new Stripe(stripeENV)
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: Object.keys(cart).map((id) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: cart[id].title,
+          images: cart[id].images,
+        },
+        unit_amount: cart[id].price * 100,
+      },
+      quantity: cart[id].quantity,
+    })),
+    mode: "payment",
+    success_url: `${Astro.url.origin}/success`,
+    cancel_url: `${Astro.url.origin}/cart`,
+  })
+
+  return new Response(JSON.stringify(session), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+}
+---
+
+<Layout title="checkout" description="give us money.">
+  <h1>Checkout</h1>
+  <div id="cart">
+    {cart.length === 0 ? "<p>Cart is empty</p>" : ""}
+    {
+      cart.length > 0
+        ? cart.map((item) => (
+            <div id={item.id} class="item">
+              <h2 id={item.id} class="item-title">
+                {item.title}
+              </h2>
+              <img src={item.images[0]} alt={item.title} />
+              <p id="quantity" class="item-quantity">
+                Quantity: {item.quantity}
+              </p>
+              <p id="price" class="item-price">
+                Price: ${item.price}
+              </p>
+            </div>
+          ))
+        : ""
+    }
+  </div>
+  <hr />
+  <p>
+    Total: ${
+      Object.keys(cart).reduce(
+        (acc, id) => acc + cart[id].price * cart[id].quantity,
+        0
+      )
+    }
+  </p>
+  <button id="checkout">Checkout (Redirect to Stripe)</button>
+</Layout>
+
+<script>
+  //   import { loadStripe } from "@stripe/stripe-js"
+  //   const rawCart = document.getElementById("cart").innerHTML
+
+  //   function parseCartItems(html) {
+  //     const parser = new DOMParser()
+  //     const doc = parser.parseFromString(html, "text/html")
+  //     const items = doc.querySelectorAll(".item")
+  //     return Array.from(items).map((item) => ({
+  //       id: item.id,
+  //       title: item.querySelector(".item-title")?.textContent?.trim(),
+  //       images: [item.querySelector("img")?.src],
+  //       quantity: item
+  //         .querySelector(".item-quantity")
+  //         ?.textContent?.split(":")[1]
+  //         ?.trim(),
+  //       price: item
+  //         .querySelector(".item-price")
+  //         ?.textContent?.split("$")[1]
+  //         .trim(),
+  //     }))
+  //   }
+
+  //   const cart = JSON.stringify(parseCartItems(rawCart))
+
+  //   console.log(cart)
+
+  //   const STRIPE_PUBLIC_KEY =
+  //     "pk_test_51Ls3YjJiFO7cOn9i5GWxoJdBk5iN6FnUgdaHgD2wBxN7bqVFfcMKXQI4v86fwqhxe4b8CjYOKZNjg2VrcU2yply200OxYQlFCt"
+
+  //   const stripe = await loadStripe(STRIPE_PUBLIC_KEY)
+
+  const cartCookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("cart="))
+    ?.split("=")[1]
+
+  const cart = cartCookie ? JSON.parse(decodeURIComponent(cartCookie)) : {}
+
+  document?.getElementById("checkout")?.addEventListener("click", async () => {
+    const response = await fetch("/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: cart,
+    })
+
+    const session = await response.json()
+
+    location.href = session.url // NOBODY'S TRACKIN MY USERS DANGNABBIT
+
+    // const result = await stripe.redirectToCheckout({
+    //   sessionId: data.session.id,
+    // })
+
+    // if (result.error) {
+    //   console.error(result.error.message)
+    // }
+  })
+</script>

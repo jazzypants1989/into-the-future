@@ -1,0 +1,43 @@
+---
+import type { Product } from "../types"
+const { product } = Astro.props as { product: Product }
+
+const productPage = Astro.url.pathname.startsWith("/product/") ? true : false
+---
+
+<div class="product" id={product.id.toString()}>
+  <a class="productLink" href=`/product/${product.id.toString()}`>
+    <img
+      src={product.thumbnail}
+      class={productPage ? "activeImage" : ""}
+      alt={product.title}
+      loading="lazy"
+    />
+    <h2>{product.title}</h2>
+  </a>
+  <p>{product.description}</p>
+  <p>${product.price}</p>
+  <form method="POST">
+    <input type="hidden" name="id" value={product.id.toString()} />
+    <button type="submit">Add to cart</button>
+  </form>
+  <a href="/">Back to home</a>
+</div>
+
+<script>
+  const links = document.querySelectorAll(
+    ".productLink"
+  ) as NodeListOf<HTMLAnchorElement>
+
+  links.forEach((link) => {
+    const image = link.querySelector("img")
+
+    if (!image) return
+
+    link.addEventListener("click", (event) => {
+      event.preventDefault()
+      image.classList.add("activeImage")
+      location.href = link.href
+    })
+  })
+</script>

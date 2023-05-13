@@ -1,0 +1,32 @@
+---
+import Layout from "../components/Layout.astro"
+
+let { id, prop } = Astro.props as { id: string; prop: string }
+
+const searchParams = Astro.url.searchParams
+
+if (searchParams.has("id")) {
+  id = searchParams.get("id")!
+}
+
+if (searchParams.has("prop")) {
+  prop = searchParams.get("prop")!
+}
+
+function Nope(id: string, prop: string) {
+  switch (id) {
+    case "badID":
+      return `<h1>404</h1><h2>Sorry buddy, but I don't think we have a product with id #${prop}.</h2>`
+    case "badFetch":
+      return `<h1>404</h1><h2>Dang, either the server is down or someone misspelled a URL. Whatever it is, it's probably Jesse's fault.</h2>`
+    case "error":
+      return `<h1>That's Weird!</h1><h4>${prop}</h4>`
+    default:
+      return `<h1>404</h1><h2>Huh, you're at ${Astro.url.pathname}, but you really shouldn't be... 🤔 </h2>`
+  }
+}
+---
+
+<Layout title="404" description="404">
+  <div set:html={Nope(id, prop)} />
+</Layout>

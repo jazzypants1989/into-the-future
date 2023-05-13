@@ -1,0 +1,69 @@
+---
+import Layout from "../../components/Layout.astro"
+import ProductComponent from "../../components/Product.astro"
+import type { Product } from "../../types"
+import { getProduct } from "../../utils/store"
+
+const { id } = Astro.params
+
+if (!id) {
+  return Astro.redirect(`/404?id=badID&prop=${id}`, 302)
+}
+
+const product = await getProduct(id)
+const cartCookie = Astro.cookies.get("cart").value
+const cart = cartCookie ? JSON.parse(cartCookie) : []
+
+if (!product) {
+  return Astro.redirect(`/404?id=badID&prop=${id}`, 302)
+}
+
+if (Astro.request.method === "POST") {
+  let product: Product | undefined
+  const form = await Astro.request.formData()
+  const body = Object.fromEntries(form.entries())
+  if (body.id && typeof body.id === "string") {
+    product = addToCart(body.id)
+  }
+  const param = `?toast=${product?.title}&type=success`
+  return Astro.redirect(`/product/${body.id}${param}`, 302)
+}
+
+function addToCart(id: string) {
+  if (cart) {
+    const cartItem = cart.find((item: Product) => item.id.toString() === id)
+    if (cartItem) {
+      cartItem.quantity++
+    } else {
+      cart.push({ ...product, quantity: 1 })
+    }
+    Astro.cookies.set("cart", JSON.stringify(cart), { path: "/" })
+  } else {
+    Astro.cookies.set("cart", JSON.stringify([{ ...product, quantity: 1 }]), {
+      path: "/",
+    })
+  }
+  return product
+}
+---
+
+<Layout title={product.title} description={product.description}>
+  <h1>{product.title}</h1>
+  <ProductComponent product={product} />
+</Layout>
+
+<script>
+  import { addToast } from "../../utils/toast.js"
+
+  const params = new URLSearchParams(window.location.search)
+  const toast = params.get("toast")
+  const type = params.get("type")
+
+  if (toast) {
+    if (type === "success") {
+      addToast(`Added ${toast} to cart!`, { type: "success" })
+    } else {
+      addToast(`Hmmm... something went wrong.`, { type: "error" })
+    }
+  }
+</script>

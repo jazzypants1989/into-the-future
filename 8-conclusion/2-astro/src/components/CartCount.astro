@@ -1,0 +1,19 @@
+---
+import type { CartItem } from "../types"
+const cartCookie = Astro.cookies.get("cart").value
+const cart = cartCookie ? JSON.parse(cartCookie) : []
+const cartCount = cart.reduce(
+  (acc: number, item: CartItem) => acc + item.quantity,
+  0
+)
+const cartTotal = cart
+  .reduce((acc: number, item: CartItem) => acc + item.quantity * item.price, 0)
+  .toFixed(2)
+---
+
+<span id="cart-count">
+  {cartCount}
+</span>
+<span id="cart-total">
+  ${cartTotal}
+</span>
