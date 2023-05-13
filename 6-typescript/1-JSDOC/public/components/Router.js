@@ -43,7 +43,7 @@ export default async function Router(navigateEvent) {
   // Start Spinner
   const spinner = createSpinner()
   const mainHTML = main?.innerHTML
-  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 200)
+  checkAndReplaceHTML(mainHTML, spinner, 200)
 
   const searchParams = new URLSearchParams(newURL.search)
   const searchValue = searchParams.get("search")
@@ -81,14 +81,12 @@ window.navigation.addEventListener("navigate", Router)
 
 /**
  * Check if the main HTML is the same as the old main HTML and replace it with a spinner if it is.
- * @param {NavigateEvent | undefined} event
  * @param {string | undefined} mainHTML
  * @param {HTMLElement} spinner
  * @param {number} time
  * @returns {void}
  */
-function checkAndReplaceHTML(event, mainHTML, spinner, time) {
-  if (event && event.formData) return
+function checkAndReplaceHTML(mainHTML, spinner, time) {
   setTimeout(() => {
     if (mainHTML === main?.innerHTML) {
       if (!main) return

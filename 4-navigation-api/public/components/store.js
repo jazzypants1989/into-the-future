@@ -3,6 +3,7 @@ import Nope from "../pages/Nope.js"
 let products = {}
 
 const db = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   const response = await fetch("https://dummyjson.com/products")
 
   if (!response.ok) {

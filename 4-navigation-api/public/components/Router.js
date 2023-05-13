@@ -15,13 +15,21 @@ export default function Router(navigateEvent) {
   const url = navigateEvent ? navigateEvent.destination.url : location.href
   const newURL = new URL(url)
   const path = newURL.pathname
+  if (navigateEvent && path === location.pathname) {
+    navigateEvent.preventDefault()
+    main.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    })
+    return
+  }
   const searchParams = new URLSearchParams(newURL.search)
   const searchValue = searchParams.get("search")
 
   // Start Spinner
   const spinner = createSpinner()
   const mainHTML = main.innerHTML
-  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 300)
+  checkAndReplaceHTML(mainHTML, spinner, 300)
 
   // Check for search
   if (searchValue) {
@@ -51,9 +59,7 @@ export default function Router(navigateEvent) {
 
 navigation.addEventListener("navigate", Router)
 
-function checkAndReplaceHTML(event, mainHTML, spinner, time) {
-  if (event && event.destination.url === location.href) return
-  if (event && event.formData) return
+function checkAndReplaceHTML(mainHTML, spinner, time) {
   setTimeout(() => {
     if (mainHTML === main.innerHTML) {
       main.innerHTML = spinner.outerHTML

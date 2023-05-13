@@ -133,7 +133,6 @@ export default async function Checkout() {
     const formValues = Array.from(inputs).some((input) => input.value)
     if (formValues) {
       savedForm = Object.fromEntries(new FormData(formEl))
-      console.log("savedForm", savedForm)
     }
   })
 

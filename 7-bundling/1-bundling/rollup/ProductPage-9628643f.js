@@ -1,0 +1,1 @@
+import{N as t,a,r as e,P as n,b as o}from"./App.js";async function r(r){if(!r)return void t("badID",r);const c=document.querySelector("#search"),i=await a(r);if(!i)return t(r);document.title=i.title,c.value=i.title,i?e({component:`\n<h1>${i.title}</h1>\n${n(i)}\n`,callback:o}):t("badID",r)}export{r as default};

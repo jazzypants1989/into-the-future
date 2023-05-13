@@ -1,0 +1,1 @@
+import{r as t}from"./App.js";function o(){document.title="About",t({component:"\n            <h1>About</h1>\n          <p>\n            This is a totally real shop that sells totally real products. It's not a\n            demonstration of how client-side routing works. Noo! It's just a\n            shop.\n          </p>\n            "})}export{o as default};

@@ -1,0 +1,1 @@
+import{r as n}from"./App.js";function o(){n({component:"\n            <h1>Success</h1>\n            <p>\n                Your order has been placed. Thank you for shopping with us!\n            </p>\n  "})}export{o as default};

@@ -4,8 +4,6 @@ import { fileURLToPath } from "url"
 
 const isProduction = process.env.NODE_ENV == "production"
 
-const stylesHandler = "style-loader"
-
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const srcDir = path.resolve(__dirname, "src")
@@ -22,6 +20,7 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
+      favicon: "./src/favicon.ico",
     }),
   ],
   module: {
@@ -33,7 +32,7 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler, "css-loader"],
+        use: ["style-loader", "css-loader"],
         include: srcDir,
       },
       {
@@ -45,6 +44,9 @@ const config = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
+  },
+  optimization: {
+    usedExports: true,
   },
 }
 

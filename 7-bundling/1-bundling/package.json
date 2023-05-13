@@ -5,18 +5,17 @@
   "source": "src/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node server",
+    "rollup": "rollup -c",
     "parcel": "parcel build",
-    "esbuild": "esbuild src/App.ts --outdir=dist --minify --loader:.jpg=file --bundle",
+    "esbuild": "node esbuild.mjs",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
-    "serve": "webpack serve",
-    "rollup": "rollup -c"
+    "serve": "webpack serve"
   },
   "type": "module",
-  "keywords": [],
+  "sideEffects": false,
   "author": "Jesse Pence",
   "license": "ISC",
   "dependencies": {
@@ -30,6 +29,7 @@
     "stripe": "^12.3.0"
   },
   "devDependencies": {
+    "@craftamap/esbuild-plugin-html": "^0.5.0",
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.1",
@@ -44,6 +44,8 @@
     "html-webpack-plugin": "^5.5.1",
     "parcel": "^2.8.3",
     "rollup": "^3.21.2",
+    "rollup-plugin-favicons": "^0.5.0",
+    "rollup-plugin-html2": "^4.0.0",
     "rollup-plugin-import-css": "^3.2.1",
     "style-loader": "^3.3.2",
     "ts-loader": "^9.4.2",

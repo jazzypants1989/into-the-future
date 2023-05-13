@@ -36,7 +36,7 @@ export default async function Router(navigateEvent?: NavigateEvent) {
   // Start Spinner
   const spinner = createSpinner()
   const mainHTML = main?.innerHTML || ""
-  checkAndReplaceHTML(navigateEvent, mainHTML, spinner, 300)
+  checkAndReplaceHTML(mainHTML, spinner, 300)
 
   // Check for search
   if (searchValue && search instanceof HTMLInputElement) {
@@ -69,12 +69,10 @@ export default async function Router(navigateEvent?: NavigateEvent) {
 window.navigation.addEventListener("navigate", Router)
 
 function checkAndReplaceHTML(
-  event: NavigateEvent | undefined,
   mainHTML: string,
   spinner: HTMLElement,
   time: number
 ) {
-  if (event && event.formData) return
   setTimeout(() => {
     if (mainHTML === main?.innerHTML) {
       if (!main) return
