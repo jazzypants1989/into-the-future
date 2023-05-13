@@ -1,0 +1,1 @@
+import{a as t}from"./toast.1f03d9c4.js";import"./Product.astro_astro_type_script_index_0_lang.26bb9542.js";import"./ThemeToggle.astro_astro_type_script_index_0_lang.863cc20c.js";const e=new URLSearchParams(window.location.search),s=e.get("toast"),o=e.get("type");s&&(o==="success"?t(`Added ${s} to cart!`,{type:"success"}):t("Hmmm... something went wrong.",{type:"error"}));

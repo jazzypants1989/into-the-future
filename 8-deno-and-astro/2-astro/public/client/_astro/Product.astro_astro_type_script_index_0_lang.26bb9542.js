@@ -1,0 +1,1 @@
+const r=document.querySelectorAll(".productLink");r.forEach(e=>{const t=e.querySelector("img");t&&e.addEventListener("click",c=>{c.preventDefault(),t.classList.add("activeImage"),location.href=e.href})});

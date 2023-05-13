@@ -1,0 +1,1 @@
+import{a}from"./toast.1f03d9c4.js";import"./ThemeToggle.astro_astro_type_script_index_0_lang.863cc20c.js";const s=new URL(window.location.href),t=s.searchParams.get("toast"),o=s.searchParams.get("type");t&&(o==="sad"?a(t,{type:"sad",duration:5e3}):a(t));
