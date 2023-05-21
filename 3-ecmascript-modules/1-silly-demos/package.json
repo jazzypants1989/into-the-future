@@ -1,0 +1,18 @@
+{
+  "name": "1-silly-demos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "IIFE": "node serverIIFE.js",
+    "AMD": "node serverAMD.js",
+    "UMD": "node serverUMD.js",
+    "ESM": "node serverESM.js"
+  },
+  "keywords": [],
+  "author": "Jesse Pence",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
