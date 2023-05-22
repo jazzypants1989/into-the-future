@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "IIFE": "node serverIIFE.js",
-    "AMD": "node serverAMD.js",
-    "UMD": "node serverUMD.js",
-    "ESM": "node serverESM.js"
+    "iife": "node serverIIFE",
+    "amd": "node serverAMD",
+    "umd": "node serverUMD",
+    "esm": "node serverESM",
+    "cjs": "node cjs"
   },
   "keywords": [],
   "author": "Jesse Pence",

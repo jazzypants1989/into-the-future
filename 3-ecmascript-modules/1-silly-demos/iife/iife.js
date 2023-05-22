@@ -9,4 +9,7 @@
   })()
 
   console.log(cheese) // cheddar
+
+  var secret = "I like cheese"
+  console.log(secret) // I like cheese
 })() // note the extra parentheses

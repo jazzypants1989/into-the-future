@@ -1,6 +1,6 @@
-import { tinyCheeseGrater } from "./cheeseGraterCollection.js"
+import { SmolBoi } from "./cheeseGraterCollection.js"
 
-console.log(tinyCheeseGrater("cheddar"))
+console.log(SmolBoi("cheddar"))
 
 const main = document.querySelector("main")
-main && (main.innerHTML = tinyCheeseGrater("cheddar"))
+main && (main.innerHTML = SmolBoi("cheddar"))

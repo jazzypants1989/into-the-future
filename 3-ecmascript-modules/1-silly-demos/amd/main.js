@@ -1,4 +1,4 @@
-require(["./cheesegraterCollection"], function (superCheeseGrater) {
+require(["./cheeseGraterCollection"], function (superCheeseGrater) {
   const main = document.querySelector("main")
 
   main.innerHTML = superCheeseGrater("cheddar")
