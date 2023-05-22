@@ -3,19 +3,19 @@ var {
   tinyCheeseGrater,
 } = require("./cheeseGraterCollection")
 
-// var diamondGrater = require("./addDiamonds")
-
 console.log(superCheeseGrater("cheddar"))
-// cheddar is grated now... in a really impressive way!
 console.log(tinyCheeseGrater("gouda"))
-// gouda is grated now... in a really cute way!
 
-// console.log(diamondGrater(superCheeseGrater)("brie"))
-// Brie is grated now... in a really impressive way! Everyone claps and cheers for your diamond encrusted superCheeseGrater!
+var addDiamonds = require("./addDiamonds")
 
-// var incredibleCheeseGrater = diamondGrater(superCheeseGrater)
+console.log("Loading addDiamonds module...")
+
+var incredibleCheeseGrater = addDiamonds(superCheeseGrater)
+
+console.log(incredibleCheeseGrater("cheddar"))
+
+// console.log("NOTHING WOULD WORK RIGHT NOW IN THE BROWSER!!")
 
 // incredibleCheeseGrater("cheddar").then((result) => {
 //   console.log(result)
-//   // cheddar is grated now... in a really impressive way! Everyone claps and cheers for your diamond encrusted superCheeseGrater!
 // })

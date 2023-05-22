@@ -4,7 +4,15 @@ require(["./cheeseGraterCollection", "./addDiamonds", "./spinner"], function (
   createSpinner
 ) {
   const main = document.querySelector("main")
+  const button = document.querySelector("button")
   const spinner = createSpinner(main)
+
+  button.addEventListener("click", () => {
+    const div = document.createElement("div")
+    div.innerHTML =
+      "You clicked the button! It still worked despite the module loading asynchronously!"
+    main.appendChild(div)
+  })
 
   const incredibleCheeseGrater = addDiamonds(superCheeseGrater)
 

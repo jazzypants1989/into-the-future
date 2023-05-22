@@ -2,14 +2,12 @@ const addDiamonds = (cheeseGrater) => {
   return (cheese) => {
     return (
       cheeseGrater(cheese) +
-      ` Everyone claps and cheers at your diamond encrusted ${cheeseGrater.name}!`
+      ` Everyone claps and cheers at your diamond encrusted cheese grater!`
     )
   }
 }
 
 module.exports = addDiamonds
-
-// console.log("Loading addDiamonds module...")
 
 // function addDiamonds(cheeseGrater) {
 //   return (cheese) => {
@@ -19,9 +17,9 @@ module.exports = addDiamonds
 //           cheeseGrater(cheese) +
 //             ` Everyone claps and cheers at your diamond encrusted ${cheeseGrater.name}!`
 //         )
-//       }, 3000) // 3-second delay
+//       }, 5000) // Simulating a 5-second delay for a large module
 //     })
 //   }
 // }
-// console.log("addDiamonds module loaded!")
+
 // module.exports = addDiamonds
