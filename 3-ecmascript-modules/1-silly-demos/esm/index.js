@@ -9,6 +9,13 @@ if (isBrowser) {
   console.log("We're in the browser!")
   main = document.querySelector("main")
   spinner = createSpinner(main)
+
+  const button = document.querySelector("button")
+  button.addEventListener("click", () => {
+    const div = document.createElement("div")
+    div.innerText = "HEY WHATS UP DUDE!?"
+    main.appendChild(div)
+  })
 }
 
 const CuteBoi = addDiamonds(SmolBoi)

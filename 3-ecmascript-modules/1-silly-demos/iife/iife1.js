@@ -1,8 +1,6 @@
 ;(function () {
   // module scope
-  var cheese = "cheddar"
-
-  ;(function () {
+  var cheese = "cheddar"(function () {
     // local scope
     var cheese = "gouda"
     console.log(cheese) // gouda

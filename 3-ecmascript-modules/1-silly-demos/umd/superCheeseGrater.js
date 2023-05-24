@@ -10,8 +10,13 @@
     root.superCheeseGrater = factory(root.cheeseGrater)
   }
 })(this, function (cheeseGrater) {
-  // this will be the global object in the browser,
-  // or the module.exports object in Node.js
+  // 'cheeseGrater' will be:
+  // in an AMD environment: the module './cheeseGraterAMD'
+  // in a Node.js/CommonJS environment: the module './cheeseGraterCJS'
+  // in the browser: `root.cheeseGrater`
+
+  // 'this' is the global context ('Window' in browser) in non-AMD/CJS environments;
+  // Otherwise, it is discarded.
   function superCheeseGrater(cheese) {
     return cheeseGrater(cheese) + "... in a really impressive way!"
   }

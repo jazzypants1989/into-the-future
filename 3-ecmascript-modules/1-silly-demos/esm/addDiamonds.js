@@ -1,4 +1,14 @@
-console.log("Loading addDiamonds module...")
+// const addDiamonds = (cheeseGrater) => {
+//   return (cheese) => {
+//     return (
+//       cheeseGrater(cheese) +
+//       ` Everyone claps and cheers at your diamond encrusted cheese grater!`
+//     );
+//   };
+// };
+
+// module.exports = addDiamonds;
+
 function addDiamonds(cheeseGrater) {
   return (cheese) => {
     return new Promise((resolve) => {
@@ -7,10 +17,9 @@ function addDiamonds(cheeseGrater) {
           cheeseGrater(cheese) +
             ` Everyone claps and cheers at your diamond encrusted ${cheeseGrater.name}!`
         )
-      }, 3000) // 3-second delay
+      }, 5000) // Simulating a 5-second delay for a large module
     })
   }
 }
 
-console.log("addDiamonds module loaded!")
-export default addDiamonds
+module.exports = addDiamonds
